@@ -1,0 +1,97 @@
+<template>
+  <div class="full-width q-px-lg absolute absolute-center">
+    <q-form
+      @submit="onSubmit"
+      @reset="onReset"
+      class="q-gutter-y-md"
+    >
+      <q-input
+        color="pink-10"
+        rounded
+        filled
+        type="email"
+        v-model="login"
+        label="E-mail *"
+        hint="E-mail"
+        lazy-rules
+        :rules="[ val => val && val.length > 0 || 'Favor informar seu e-mail']"
+      />
+
+      <q-input
+        color="pink-10"
+        rounded
+        filled
+        type="password"
+        v-model="senha"
+        label="Senha *"
+        hint="Senha"
+        lazy-rules
+        :rules="[
+          val => val !== null && val !== '' || 'Favor informe sua senha',
+          val => val.length >= 6 && val.length <= 32 || 'Senha inválida'
+        ]"
+      />
+
+      <!-- <q-toggle v-model="accept" color="pink-10" label="Lembrar meus dados" /> -->
+      <div class="row justify-end q-ma-xs">
+        <a class="column items-end color-text text-bold" @click="$router.push({name: 'cadastroUsuario'})"> Cadastre-se </a>
+      </div>
+      <div class="full-width q-mt-md q-gutter-x-xs" >
+        <q-btn rounded class="glossy half-width float-right" label="Entrar" type="submit" color="pink-10"/>
+        <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
+      </div>
+    </q-form>
+  </div>
+</template>
+
+<script>
+export default {
+  login: 'PageIndex',
+  data() {
+      return {
+        login: null,
+        senha: null,
+        accept: true
+      }
+  },
+  mounted() {
+    this.$store.commit('modulos/setTitulo', 'Login');
+    //this.$store.dispatch('modulos/getUsers');
+  },
+  methods: {
+    onSubmit () {
+      if (this.accept !== true) {
+        this.$q.notify({
+          color: 'red-5',
+          textColor: 'white',
+          icon: 'warning',
+          message: 'You need to accept the license and terms first'
+        })
+      }
+      else {
+        // this.$q.notify({
+        //   color: 'green-4',
+        //   textColor: 'white',
+        //   icon: 'cloud_done',
+        //   message: 'Submitted'
+        // })
+        this.$router.replace({name: 'menu'})
+      }
+    },
+
+    onReset () {
+      this.login = null
+      this.senha = null
+      this.accept = false
+    }
+  }
+}
+</script>
+<style>
+.half-width{
+  width: 48%;
+}
+.color-text{
+  color: rgb(136, 14, 79);
+}
+</style>
