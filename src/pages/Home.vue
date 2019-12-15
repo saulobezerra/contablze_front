@@ -5,6 +5,8 @@
       <br>
       <q-btn unelevated rounded color="pink-10" label="Despesas" class="full-width q-mt-sm" :to="{name: 'despesas'}" ></q-btn>
       <br>
+      <q-btn unelevated rounded color="pink-10" label="Produtos" class="full-width q-mt-sm" :to="{name: 'produtos'}" ></q-btn>
+      <br>
       <q-btn unelevated rounded color="pink-10" label="Lucros"  class="full-width q-mt-sm" :to="{name: 'lucro'}" ></q-btn>
       <br>
       <q-btn unelevated rounded color="pink-10" label="Meus Dados" class="full-width q-mt-sm" :to="{name: 'perfil'}" ></q-btn>

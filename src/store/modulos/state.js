@@ -26,6 +26,10 @@ export default {
     {nome: 'Bolo de Leite', valor: 8.00, comprador: 'Severino', data: '09/11/2019'},
     {nome: 'Bolo Fofo', valor: 8.00, comprador: 'Severino', data: '08/11/2019'},
   ],
+  produtos:[
+    {id: 0, nome: 'Bolo Fofo', valor: 8.00},
+    {id: 1, nome: 'Bolo de Leite', valor: 10.00}
+  ],
   totalDespesas: 0,
   totalReceitas: 0,
   user : undefined
