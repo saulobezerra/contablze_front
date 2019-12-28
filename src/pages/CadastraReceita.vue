@@ -35,7 +35,7 @@
         ]"
       />
 
-      <q-select rounded filled behavior="menu" 
+      <q-select rounded filled behavior="menu" color="pink-10"
         v-model="situacao" :options="['Pago', 'Pendente']" hint="Situação de Pagamento" label="Situação *" />
 
       <q-input

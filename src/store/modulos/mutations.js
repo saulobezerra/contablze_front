@@ -4,6 +4,7 @@ export const setTitulo = (state, titulo) => {
     state.titulo = titulo
 }
 export const addDespesa = (state, despesa) => {
+    despesa["valor"] = despesa.valorUnitario * despesa.qtdeInsumo
     state.despesas.push(despesa)
 }
 export const addReceita = (state, receita) => {

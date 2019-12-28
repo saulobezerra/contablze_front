@@ -83,7 +83,7 @@ export default {
     formataData(data) {
       console.log(data);
       let dt = new Date(data);
-      return dt.getDay() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
+      return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
     }
   },
   computed: {
