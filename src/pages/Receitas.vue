@@ -11,18 +11,39 @@
         </q-item-section> -->
 
         <q-item-section >
-          <q-item-label lines="1"> {{receita.nome}} </q-item-label>
-          <q-item-label caption lines="2" >
-            <span class="text-weight-bold">Comprador: </span>
-            {{receita.comprador}}
+          <q-item-label lines="1" class="text-weight-bold text-body1"> {{receita.produto.nome}} </q-item-label>
+          <q-item-label caption lines="4">
+            <span class="text-weight-bold text-body2">Comprador: </span>
+            <span class="text-body2"> {{receita.nomeCliente}} </span>
             <br>
-            <span class="text-weight-bold">Data: </span>
-            {{receita.data}}
+            <span class="text-weight-bold text-body2">Data: </span>
+            <span class="text-body2"> {{receita.dataReceita | formataData}} </span>    
+            <br>   
+            <span class="text-weight-bold text-body2">Situação: </span>
+            <span class="text-body2"> {{ receita.isPago ? "Pago" : "Pendente" }} </span>
+            <br>
+            <div v-if="receita.observacao">
+              <span class="text-weight-bold text-body2">Obs.: </span>
+              <span class="text-body2"> {{receita.observacao}} </span>   
+            </div>
           </q-item-label>
         </q-item-section>
+        
+        <!-- <q-item-section>
+          <q-item-label caption lines="3">
+            <span class="text-weight-bold">Situação: </span>
+            {{receita.isPago }}
+            <br>
+            <span class="text-weight-bold">Obs.: </span>
+            {{receita.observacao}}
+          </q-item-label>
+        </q-item-section> -->
 
         <q-item-section side center>
           R$ {{receita.valor.toFixed(2)}}
+          <!-- <q-item-label>
+            <span class="text-body2"> {{receita.isPago }} </span>
+          </q-item-label> -->
         </q-item-section>
         
       </q-item>
@@ -58,6 +79,13 @@ export default {
         buttonAdd: true
       }
   },
+  filters: {
+    formataData(data) {
+      console.log(data);
+      let dt = new Date(data);
+      return dt.getDay() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
+    }
+  },
   computed: {
       receitas() {
           return this.$store.state.modulos.receitas;
@@ -74,9 +102,7 @@ export default {
 </script>
 
 <style>
-.largura{
-  width: 70%;
-}
+
 .total{
   margin-bottom: 25%;
 }
@@ -84,5 +110,7 @@ export default {
   background-color: rgb(253, 216, 53);
   
 }
-
+.alturaLabelItem{
+  height: 60px;
+}
 </style>
