@@ -1,5 +1,8 @@
 // export function someMutation (/* state */) {
 // }
+export const setUsuario = (state, usuario) => {
+    state.user = usuario;
+}
 export const setTitulo = (state, titulo) => {
     state.titulo = titulo
 }
@@ -9,9 +12,6 @@ export const addDespesa = (state, despesa) => {
 }
 export const addReceita = (state, receita) => {
     state.receitas.push(receita)
-}
-export const registraUsuario = (state, usuario) => {
-    state.user = usuario;
 }
 export const totalDespesas = (state, valor) => {
     state.totalDespesas = valor;

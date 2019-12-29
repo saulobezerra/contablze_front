@@ -11,7 +11,7 @@
         filled
         color="pink-10"
         v-model="usuario.nome"
-        label="Nome *"
+        label="Nome "
         hint="Nome"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Informe seu nome.']"
@@ -22,18 +22,19 @@
         filled
         color="pink-10"
         v-model="usuario.userName"
-        label="User Name *"
+        label="User Name "
         hint="User Name"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Informe o User Name.']"
       />
 
       <q-input
+        type="email"
         rounded
         filled
         color="pink-10"
         v-model="usuario.email"
-        label="E-mail *"
+        label="E-mail "
         hint="E-mail"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Informe o seu e-mail.']"
@@ -45,8 +46,9 @@
         type="password"
         color="pink-10"
         v-model="usuario.senha"
-        label="Senha *"
+        label="Senha "
         hint="Senha"
+        ref="passwordField"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Informe uma senha.']"
       />
@@ -57,10 +59,10 @@
         type="password"
         color="pink-10"
         v-model="confirmaSenha"
-        label="Confirme a senha  *"
+        label="Confirme a senha  "
         hint="Confirmação"
         lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Cofirme sua senha.']"
+        :rules="[ val => val && val.length > 0 && this.$refs.passwordField.value == val || 'O valor do campo de ser igual a senha.']"
       />
       
       <div v-if="this.$store.state.modulos.user" class="full-width q-mt-lg q-gutter-x-xs" >
@@ -99,8 +101,21 @@ export default {
   },
   methods: {
     onSubmit() {
-      this.$store.commit('modulos/registraUsuario', this.usuario );
-      this.$router.replace({name: "login"});
+      let user = {
+        nome: this.usuario.nome,
+        email: this.usuario.email,
+        userName: this.usuario.userName,
+        senha: btoa(this.usuario.senha)
+      }
+
+      this.$store.dispatch('modulos/gravaUsuario', user ).then(r => {
+        console.log(r)
+        this.$router.replace({name: "login"});
+      })
+      .catch(e => {
+        console.log(e)
+      })
+      
     },
     onReset() {
       if(this.$store.state.modulos.user) {

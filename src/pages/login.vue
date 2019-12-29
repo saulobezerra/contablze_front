@@ -9,7 +9,6 @@
         color="pink-10"
         rounded
         filled
-        type="email"
         v-model="login"
         label="E-mail *"
         hint="E-mail"
@@ -75,6 +74,12 @@ export default {
         //   icon: 'cloud_done',
         //   message: 'Submitted'
         // })
+        let dadosLogin ={
+          login: this.login,
+          senha: btoa(this.senha)
+        } 
+        this.$store.dispatch('modulos/login', dadosLogin);
+
         this.$router.replace({name: 'menu'})
       }
     },
