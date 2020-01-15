@@ -3,7 +3,7 @@
   <div class="q-pa-sm q-mt-sm q-gutter-y-xs">
     <q-list separator inset >
 
-      <q-item clickable v-ripple v-for="(produto,i) in produtos" :key="i" :to="{name: 'editarProduto', params:{id: i}}">
+      <q-item clickable v-ripple v-for="(produto) in produtos" :key="produto.id" :to="{name: 'editarProduto', params:{id: produto.id}}">
         <!-- <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">
@@ -46,6 +46,11 @@ export default {
       produtos() {
           return this.$store.state.modulos.produtos;
       }
+  },
+  beforeMount() {
+    if( !this.$store.getters['modulos/getProdutos'] ) {
+      this.$router.replace({name: 'cadastraProduto'})
+    }
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Produtos')

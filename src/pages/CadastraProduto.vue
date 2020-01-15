@@ -28,7 +28,7 @@
         hint="Valor do produto"
         lazy-rules
         :rules="[
-          val => val > 0 || 'Informe o valor d0 produto'
+          val => val > 0 || 'Informe o valor do produto'
         ]"
       />
 
@@ -45,7 +45,6 @@ export default {
   data() {
       return {
         produto: {
-            id: null,
             nome: '',
             valor: null
         }  
@@ -53,11 +52,15 @@ export default {
   },
   
   mounted() {
+    const that = this
       if (this.$route.name == 'editarProduto') {
+        let obj = this.$store.getters['modulos/getProdutos'].find(function(el, i) {
+            if (el.id === that.$route.params.id)
+              return el;
+          })
           this.$store.commit('modulos/setTitulo', 'Editar Produto');
-          this.produto.id = this.$store.getters['modulos/getProdutos'][this.$route.params.id].id
-          this.produto.nome = this.$store.getters['modulos/getProdutos'][this.$route.params.id].nome
-          this.produto.valor = this.$store.getters['modulos/getProdutos'][this.$route.params.id].valor
+          this.produto.nome = obj.nome
+          this.produto.valor = obj.valor
       }else {
           this.$store.commit('modulos/setTitulo', 'Cadastrar Produto');
       }
@@ -65,12 +68,15 @@ export default {
   methods: {
     onSubmit() {
       this.produto.valor = parseFloat(this.produto.valor);
+      
       if (this.$route.name == 'editarProduto'){
-          this.$store.commit('modulos/editaProduto', this.produto );
+          let parametrosDaRequisicao = {
+            idProd: this.$route.params.id,
+            produto: this.produto
+          }
+          this.$store.dispatch('modulos/editaProduto', parametrosDaRequisicao );
       }else {
-          this.produto.id = this.$store.getters['modulos/getProdutos'].length;
-          // console.log(this.$store.getters['modulos/getProdutos'].length, this.produto.id);
-          this.$store.commit('modulos/addProduto', this.produto );
+          this.$store.dispatch('modulos/gravaProduto', this.produto )
       }
       this.$router.replace({name: "produtos"})
     },

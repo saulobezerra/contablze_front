@@ -78,9 +78,13 @@ export default {
           login: this.login,
           senha: btoa(this.senha)
         } 
-        this.$store.dispatch('modulos/login', dadosLogin);
-
-        this.$router.replace({name: 'menu'})
+        this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
+          console.log(resp)
+          this.$router.replace({name: 'menu'})
+        })
+        .catch(err => {
+          console.log(err)
+        })
       }
     },
 

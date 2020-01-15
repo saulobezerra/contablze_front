@@ -24,6 +24,10 @@ export const addProduto = (state, produto) => {
     state.produtos.push(produto);
 }
 
+export const setProdutos = (state, produtos) => {
+    state.produtos = produtos;
+}
+
 export const editaProduto = (state, produto) => {
     for (let index = 0; index < state.produtos.length; index++) {
         console.log(state.produtos[index].id, produto.id)

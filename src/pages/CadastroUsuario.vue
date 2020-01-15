@@ -109,18 +109,20 @@ export default {
       }
 
       this.$store.dispatch('modulos/gravaUsuario', user ).then(r => {
-        console.log(r)
+        console.log("Cadastro realizado com sucesso")
         this.$router.replace({name: "login"});
       })
       .catch(e => {
-        console.log(e)
+        console.log("Erro ao cadastrar usuário. ", e)
       })
       
     },
     onReset() {
       if(this.$store.state.modulos.user) {
+        // Caso já esteja logado e acesse "Meus Dados" o botão 'Limpar' torna-se 'Voltar'
         this.$router.replace({name: "menu"});
       }else {
+        // Limpando variáveis
         this.usuario.nome = '';
         this.usuario.email = '';
         this.usuario.userName = '';

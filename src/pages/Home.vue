@@ -28,6 +28,8 @@ export default {
     this.$store.commit('modulos/setTitulo', 'Menu');
     this.$store.commit('modulos/totalReceitas', this.calculaTotal(this.$store.state.modulos.receitas))
     this.$store.commit('modulos/totalDespesas', this.calculaTotal(this.$store.state.modulos.despesas));
+
+    this.$store.dispatch('modulos/getProdutos')
   }
 }
 </script>
