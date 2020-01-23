@@ -3,7 +3,8 @@
   <div class="q-pa-sm q-mt-sm q-gutter-y-xs">
     <q-list separator inset >
 
-      <q-item clickable v-ripple v-for="(despesa,i) in despesas" :key="i">
+      <q-item clickable v-ripple v-for="despesa in despesas" :key="despesa.id" 
+      :to="{name: 'editarDespesa', params:{id: despesa.id}}" >
         <!-- <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">
@@ -68,14 +69,16 @@ export default {
   },
   filters: {
     formataData(data) {
-      let dt = new Date();
+      let dt = new Date(data);
       return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
     }
   },
   computed: {
       despesas() {
-        console.log(this.$store.state.modulos.despesas)
-          return this.$store.state.modulos.despesas;
+        return this.$store.getters['modulos/getDespesas']
+      },
+      totalDespesas() {
+          return this.$store.getters['modulos/getTotalDespesas']
       }
   },
   beforeMount() {
@@ -84,7 +87,6 @@ export default {
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Despesas')
       this.$store.dispatch('modulos/getDespesas')
-      //this.$store.commit('modulos/totalDespesas', this.calculaTotal(this.$store.state.modulos.despesas))
   }
 }
 </script>

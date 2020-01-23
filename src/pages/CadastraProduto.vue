@@ -32,10 +32,16 @@
         ]"
       />
 
-      <div class="full-width q-mt-lg q-gutter-x-xs" >
+      <div v-if="$route.name == 'editarProduto'" class="full-width q-mt-lg q-gutter-x-xs" >
+        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
+        <q-btn rounded class="glossy half-width" label="Salvar" type="submit" color="pink-10"/>
+      </div>
+
+      <div v-else class="full-width q-mt-lg q-gutter-x-xs" >
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
+
     </q-form>
 
   </div>
@@ -81,8 +87,12 @@ export default {
       this.$router.replace({name: "produtos"})
     },
     onReset() {
-      this.produto.nome = '';
-      this.produto.valor = null;
+      if (this.$route.name == 'editarProduto') {
+        this.$router.go(-1)
+      }else {
+        this.produto.nome = '';
+        this.produto.valor = null;
+      }
     }
   }
 }

@@ -17,7 +17,14 @@ export function getReceitas(state) {
     return state.receitas
 }
 
+export function getDespesas(state) {
+    return state.despesas
+}
+
 export function getTotalReceitas(state) {
-    console.log(state.totalReceitas)
     return state.totalReceitas
+}
+
+export function getTotalDespesas(state) {
+    return state.totalDespesas
 }

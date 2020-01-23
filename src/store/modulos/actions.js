@@ -76,8 +76,31 @@ export function gravaReceita (state, receita) {
         state.dispatch('getReceitas')
     })
     .catch(error => {
-        console.Global(error)
+        console.log(error)
     })
+}
+
+export function editarReceita (state, parametrosDaRequisicao) {
+    axios.put('/receitas/' + parametrosDaRequisicao.idReceita, parametrosDaRequisicao.receita)
+    .then(resp => {
+        console.log('Receita alterada com sucesso', resp.data)
+
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+export function editarDespesa (state, parametrosDaRequisicao) {
+    axios.put('/despesas/' + parametrosDaRequisicao.idDespesa, parametrosDaRequisicao.despesa)
+    .then(resp => {
+        console.log('Despesa alterada com sucesso', resp.data)
+        state.dispatch('getDespesas')
+    })
+    .catch(error => {
+        console.log(error)
+    })
+
 }
 
 export function gravaProduto(state, produto) {

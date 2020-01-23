@@ -3,7 +3,8 @@
   <div class="q-pa-sm q-mt-sm q-gutter-y-xs">
     <q-list separator inset >
 
-      <q-item clickable v-ripple v-for="(receita,i) in receitas" :key="i">
+      <q-item clickable v-ripple v-for="receita in receitas" :key="receita.id" 
+      :to="{name: 'editarReceita', params:{id: receita.id}}" >
         <!-- <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">

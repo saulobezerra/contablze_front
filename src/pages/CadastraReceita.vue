@@ -7,17 +7,16 @@
       @reset="onReset"
     >
       <q-select rounded filled behavior="menu"
-         v-model="produto" :options="produtos | namesProd" hint="Produto" label="Produto *" />
+         v-model="produto" :options="produtos | namesProd" hint="Produto" label="Produto *" 
+         lazy-rules :rules="[ val => val && val.length > 0 || 'Informe o produto da receita.' ]" />
 
       <q-input
         rounded
         filled
         color="pink-10"
         v-model="receita.nomeCliente"
-        label="Cliente *"
+        label="Cliente"
         hint="Nome do Cliente"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Informe o nome do cliente.']"
       />
 
       <q-input
@@ -36,7 +35,8 @@
       />
 
       <q-select rounded filled behavior="menu" color="pink-10"
-        v-model="situacao" :options="situacoes" hint="Situação de Pagamento" label="Situação *" />
+        v-model="situacao" :options="situacoes" hint="Situação de Pagamento" label="Situação *"
+        lazy-rules :rules="[ val => val && val.length > 0 || 'Informe a situação da receita.' ]" />
 
       <q-input
         rounded
@@ -56,9 +56,14 @@
         hint="Data da receita"
         lazy-rules
         :rules="[ val => val && val.length > 0 || 'Informe a data da sua receita.']"
-      /> -->
+      /> --> 
 
-      <div class="full-width q-mt-lg q-gutter-x-xs" >
+      <div v-if="$route.name == 'editarReceita'" class="full-width q-mt-lg q-gutter-x-xs" >
+        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
+        <q-btn rounded class="glossy half-width" label="Salvar" type="submit" color="pink-10"/>
+      </div>
+
+      <div v-else class="full-width q-mt-lg q-gutter-x-xs" >
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
@@ -101,33 +106,67 @@ export default {
   },
 
   mounted() {
-      this.$store.commit('modulos/setTitulo', 'Cadastro de Receita');
+    const that = this
+      if (this.$route.name == 'editarReceita') {
+        let obj = this.$store.getters['modulos/getReceitas'].find(function(el, i) {
+            if (el.id === that.$route.params.id)
+              return el;
+          })
+          this.$store.commit('modulos/setTitulo', 'Editar Receita');
+
+          this.receita.nomeCliente = obj.nomeCliente
+          this.receita.produto = obj.produto
+          this.receita.qtdeProduto = obj.qtdeProduto
+          this.receita.isPago = obj.isPago
+          this.receita.observacao = obj.observacao
+          obj.isPago ? this.situacao = this.situacoes[1] : this.situacao = this.situacoes[0]
+          this.produto = obj.produto.nome
+
+      }else {
+        this.$store.commit('modulos/setTitulo', 'Cadastro de Receita');
+      }
   },
   methods: {
     onSubmit() {
+      let objProduto = new Object();
       this.produtos.forEach(element => {
-        if(element.nome == this.produto) {
-          this.produto = element;
-        }
-      });
-      this.receita.produto  = this.produto;
+          if(element.nome == this.produto) {
+            objProduto = element;
+          }
+        });
+      this.receita.produto  = objProduto;
+
       this.situacao == 'Pendente' ? this.receita.isPago = false : this.receita.isPago = true;
 
-      this.$store.dispatch('modulos/gravaReceita', this.receita)
+      if (this.$route.name == 'editarReceita') {
+        let parametrosDaRequisicao = {
+          idReceita: this.$route.params.id,
+          receita: this.receita
+        }
+        this.$store.dispatch('modulos/editarReceita', parametrosDaRequisicao)
+
+      }else{
+        this.$store.dispatch('modulos/gravaReceita', this.receita)
+      }
+    
       this.$router.replace({name: "receitas"})
     },
     onReset() {
-      this. receita = {
-        nomeCliente: '',
-          observacao: '',
-          qtdeProduto: null,
-          isPago: false,
-          produto: {
-            id: null
-          }
+      if(this.$route.name == 'editarReceita') {
+        this.$router.go(-1)
+      }else{
+        this. receita = {
+          nomeCliente: '',
+            observacao: '',
+            qtdeProduto: null,
+            isPago: false,
+            produto: {
+              id: null
+            }
+        }
+        this.produto = null;
+        this.situacao = null;
       }
-      this.produto = null;
-      this.situacao = null;
     }
   }
 }

@@ -7,7 +7,7 @@
       @reset="onReset"
     >
       <q-select rounded filled behavior="menu" color="pink-10"
-        v-model="despesa.tipo" :options="tiposDespesa | tipos" hint="Tipo da despesa" label="Tipo *" />
+        v-model="tipoDespesa" :options="tiposDespesa | tipos" hint="Tipo da despesa" label="Tipo *" />
 
       <q-input
         rounded
@@ -57,8 +57,6 @@
         v-model="despesa.local"
         label="Local"
         hint="Local da despesa"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Informe o lugar da despesa.']"
       />
 
       <q-input 
@@ -69,7 +67,12 @@
         v-model="despesa.data" 
         hint="Data da despesa" />
 
-      <div class="full-width q-mt-lg q-gutter-x-xs" >
+      <div v-if="$route.name == 'editarDespesa'" class="full-width q-mt-lg q-gutter-x-xs" >
+        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
+        <q-btn rounded class="glossy half-width" label="Salvar" type="submit" color="pink-10"/>
+      </div>
+
+      <div v-else class="full-width q-mt-lg q-gutter-x-xs" >
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
@@ -89,19 +92,39 @@ export default {
           valorUnitario: null,
           data: new Date()
         },
+        tipoDespesa: ''
       }
   },
   mounted() {
-      this.$store.commit('modulos/setTitulo', 'Cadastro de Despesa');
-      this.$store.dispatch('modulos/getTiposDespesas')
-      this.dataAtual();
+    this.$store.dispatch('modulos/getTiposDespesas')
+    const that = this
+      if (this.$route.name == 'editarDespesa') {
+        this.$store.commit('modulos/setTitulo', 'Editar Despesa');
+
+        let obj = this.$store.getters['modulos/getDespesas'].find(function(el, i) {
+            if (el.id === that.$route.params.id)
+              return el;
+          })
+
+          this.despesa.tipo = obj.tipo
+          this.despesa.descricao = obj.descricao
+          this.despesa.qtde_insumo = obj.qtde_insumo
+          this.despesa.local = obj.local
+          this.despesa.valorUnitario = obj.valorUnitario
+          this.despesa.data = this.formataData(obj.data)
+
+          this.tipoDespesa = obj.tipo.descricao
+
+      }else {
+        this.$store.commit('modulos/setTitulo', 'Cadastro de Despesa');
+        this.dataAtual();
+      }
   },
 
   computed: {
-      tiposDespesa() {
-        console.log(this.$store.state.modulos.tiposDespesa);
-          return this.$store.state.modulos.tiposDespesa;
-      }
+    tiposDespesa() {
+      return this.$store.state.modulos.tiposDespesa;
+    }
   },
   filters: {
     tipos(tiposDesp) {
@@ -109,7 +132,7 @@ export default {
       for (let index = 0; index < tiposDesp.length; index++) {
         names.push(tiposDesp[index].descricao);
       }
-      console.log(names);
+      //console.log(names);
       return names;
     }
   },
@@ -125,30 +148,53 @@ export default {
 
       this.despesa.data = dt.getFullYear() + "-" + mes + "-" + dia;
     },
+    formataData(data) {
+      let dt = new Date(data);
+      let mes = dt.getMonth()+1;
+      let dia = dt.getDate();
+
+      dia = (dia < 10 ? '0' + dia : dia);
+      mes = (mes < 10 ? '0' + mes : mes);
+
+      return dt.getFullYear() + "-" + mes + "-" + dia;
+    },
 
     onSubmit() {
-      
+
       this.tiposDespesa.forEach(element => {
-        if(element.descricao == this.despesa.tipo) {
-          console.log(this.despesa, element);
+        if(element.descricao == this.tipoDespesa) {
           this.despesa.tipo = element;
         }
-        console.log(this.despesa);
-        
       });
 
       this.despesa.valorUnitario = parseFloat(this.despesa.valorUnitario);
-      //this.$store.commit('modulos/addDespesa', this.despesa );
-      this.$store.dispatch('modulos/gravaDespesa', this.despesa);
+      
+      console.log(this.despesa);
+      if (this.$route.name == 'editarDespesa') {
+        let parametrosDaRequisicao = {
+          idDespesa: this.$route.params.id,
+          despesa: this.despesa
+        }
+        this.$store.dispatch('modulos/editarDespesa', parametrosDaRequisicao)
+
+      }else{
+        this.despesa.valorUnitario = parseFloat(this.despesa.valorUnitario);
+        this.$store.dispatch('modulos/gravaDespesa', this.despesa);
+      }
+      
       this.$router.replace({name: "despesas"})
     },
     
     onReset() {
-      this.despesa.descricao = '';
-      this.despesa.qtde_insumo = null;
-      this.despesa.valorUnitario = null;
-      this.despesa.local = '';
-      this.dataAtual();
+      if(this.$route.name == 'editarDespesa') {
+        this.$router.go(-1)
+      }else {
+        this.despesa.descricao = '';
+        this.despesa.qtde_insumo = null;
+        this.despesa.valorUnitario = null;
+        this.despesa.local = '';
+        this.dataAtual();
+      }
     }
   }
 }
