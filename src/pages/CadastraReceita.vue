@@ -36,7 +36,7 @@
       />
 
       <q-select rounded filled behavior="menu" color="pink-10"
-        v-model="situacao" :options="['Pago', 'Pendente']" hint="Situação de Pagamento" label="Situação *" />
+        v-model="situacao" :options="situacoes" hint="Situação de Pagamento" label="Situação *" />
 
       <q-input
         rounded
@@ -74,15 +74,14 @@ export default {
           nomeCliente: '',
           observacao: '',
           qtdeProduto: null,
+          isPago: false,
           produto: {
-            id: null
-          },
-          usuario: {
             id: null
           }
         },
         produto: null,  
         situacao: '',
+        situacoes:['Pendente', 'Pago']
       }
   },
   filters: {
@@ -91,7 +90,7 @@ export default {
       for (let index = 0; index < prods.length; index++) {
         names.push(prods[index].nome);
       }
-      console.log(names);
+
       return names;
     }
   },
@@ -108,26 +107,22 @@ export default {
     onSubmit() {
       this.produtos.forEach(element => {
         if(element.nome == this.produto) {
-          //this.produto = new Object();
           this.produto = element;
-          //return
         }
       });
       this.receita.produto  = this.produto;
-      console.log(this.receita, "  " ,this.produto, "  ", this.situacao)
-      // this.receita.valor = parseFloat(this.receita.valor);
-      // this.$store.commit('modulos/addReceita', this.receita );
-      // this.$router.replace({name: "receitas"})
+      this.situacao == 'Pendente' ? this.receita.isPago = false : this.receita.isPago = true;
+
+      this.$store.dispatch('modulos/gravaReceita', this.receita)
+      this.$router.replace({name: "receitas"})
     },
     onReset() {
       this. receita = {
         nomeCliente: '',
           observacao: '',
           qtdeProduto: null,
+          isPago: false,
           produto: {
-            id: null
-          },
-          usuario: {
             id: null
           }
       }

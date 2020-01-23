@@ -12,3 +12,12 @@ export function getUsuarioId (state) {
 export function getUsuario(state) {
     return state.user
 }
+
+export function getReceitas(state) {
+    return state.receitas
+}
+
+export function getTotalReceitas(state) {
+    console.log(state.totalReceitas)
+    return state.totalReceitas
+}

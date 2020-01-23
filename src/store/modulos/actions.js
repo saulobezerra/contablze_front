@@ -1,11 +1,15 @@
 // import Vue from 'vue'
 import Axios from "axios";
+import Global from '../../mixins/Global'
+import { setDespesas } from "./mutations";
 
 const axios = Axios.create({
     baseURL: 'http://localhost:8080',
     timeout: 20000,
     // headers: {'X-Custom-Header': 'foobar'}
   });
+
+var idUsuario = 0;
 
 export function someAction (/* context */) {
 }
@@ -16,8 +20,9 @@ export function login(state, dadosLogin) {
         let login = dadosLogin.login;
         let senha = dadosLogin.senha;
         axios.get('/usuarios/login/'+login+'/'+senha).then((resp) => {
-            resp.data.senha = '******'
+            console.log(resp.data)
             state.commit('setUsuario', resp.data)
+            idUsuario = state.getters['getUsuarioId']
             resolve(true)
         })
         .catch(function (error) {
@@ -50,17 +55,35 @@ export function getUsers() {
 }
 
 export function getReceitas (state) {
-	axios.get('/receitas')
+    axios.get('/receitas/usuario/'+idUsuario)
 	.then((resp) => {
-		state.commit('setReceitas', resp.data)
+        console.log(resp.data)
+        state.commit('setReceitas', resp.data)
+        state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
 	})
 	.catch(function (error) {
     	console.log(error);
   });
 }
 
+export function gravaReceita (state, receita) {
+    receita['usuario'] = new Object();
+    receita['usuario']['id'] = idUsuario;
+
+    axios.post('/receitas', receita)
+    .then(resp => {
+        console.log('Receita cadastrada com sucesso' , resp)
+        state.dispatch('getReceitas')
+    })
+    .catch(error => {
+        console.Global(error)
+    })
+}
+
 export function gravaProduto(state, produto) {
-    produto['usuario'] = state.getters['getUsuario']
+    produto['usuario'] = new Object();
+    produto['usuario']['id'] = idUsuario;
+
     axios.post('/produtos', produto)
     .then(resp => {
         console.log(resp)
@@ -71,9 +94,47 @@ export function gravaProduto(state, produto) {
     })
 }
 
+export function gravaDespesa(state, despesa) {
+    despesa['usuario'] = new Object();
+    despesa['usuario']['id'] = idUsuario;
+    console.log(despesa)
+    axios.post('/despesas', despesa)
+    .then(resp => {
+        console.log(resp.data)
+        state.dispatch('getDespesas')
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+export function getDespesas(state) {
+    idUsuario =  Global.methods.getIdUsuario()
+    axios.get('/despesas/usuario/' + idUsuario)
+    .then(resp => {
+        console.log(resp)
+        state.commit('setDespesas', resp.data)
+        state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
+    })
+    .catch(error => {
+        console.log(error)
+    })
+}
+
+export function getTiposDespesas (state) {
+    axios.get('/tiposDespesa')
+    .then(resp => {
+        console.log(resp)
+        state.commit('setTiposDespesa', resp.data)
+
+    })
+    .catch(error => {
+        console.log(error);
+    })
+}
+
 export function editaProduto(state, parametrosDaRequisicao) {
     console.log(state.getters['getUsuario'])
-    parametrosDaRequisicao['produto']['usuario'] = state.getters['getUsuario']
     console.log(parametrosDaRequisicao)
     axios.put('/produtos/'+parametrosDaRequisicao.idProd, parametrosDaRequisicao.produto)
     .then((resp) => {
@@ -85,7 +146,6 @@ export function editaProduto(state, parametrosDaRequisicao) {
 }
 
 export function getProdutos(state) {
-    let idUsuario = state.getters['getUsuarioId']
     axios.get('/produtos/usuario/'+ idUsuario)
     .then((resp) => {
         state.commit('setProdutos', resp.data)

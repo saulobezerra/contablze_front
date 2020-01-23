@@ -83,7 +83,8 @@ export default {
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Despesas')
-      this.$store.commit('modulos/totalDespesas', this.calculaTotal(this.$store.state.modulos.despesas))
+      this.$store.dispatch('modulos/getDespesas')
+      //this.$store.commit('modulos/totalDespesas', this.calculaTotal(this.$store.state.modulos.despesas))
   }
 }
 </script>

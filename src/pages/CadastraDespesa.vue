@@ -13,7 +13,7 @@
         rounded
         filled
         color="pink-10"
-        v-model="despesa.nome"
+        v-model="despesa.descricao"
         label="Nome *"
         hint="Nome da despesa"
         lazy-rules
@@ -26,7 +26,7 @@
         type="number"
         step=".01"
         color="pink-10"
-        v-model="despesa.qtdeInsumo"
+        v-model="despesa.qtde_insumo"
         label="Quantidade *"
         hint="Quantidade da despesa"
         lazy-rules
@@ -83,8 +83,8 @@ export default {
       return {
         despesa: {
           tipo: null,
-          nome: '',
-          qtdeInsumo: null,
+          descricao: '',
+          qtde_insumo: null,
           local: '',
           valorUnitario: null,
           data: new Date()
@@ -93,6 +93,7 @@ export default {
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Cadastro de Despesa');
+      this.$store.dispatch('modulos/getTiposDespesas')
       this.dataAtual();
   },
 
@@ -137,13 +138,14 @@ export default {
       });
 
       this.despesa.valorUnitario = parseFloat(this.despesa.valorUnitario);
-      this.$store.commit('modulos/addDespesa', this.despesa );
+      //this.$store.commit('modulos/addDespesa', this.despesa );
+      this.$store.dispatch('modulos/gravaDespesa', this.despesa);
       this.$router.replace({name: "despesas"})
     },
     
     onReset() {
-      this.despesa.nome = '';
-      this.despesa.qtdeInsumo = null;
+      this.despesa.descricao = '';
+      this.despesa.qtde_insumo = null;
       this.despesa.valorUnitario = null;
       this.despesa.local = '';
       this.dataAtual();

@@ -59,7 +59,7 @@
                 <q-item-label lines="1"> Total </q-item-label>
             </q-item-section>
             <q-item-section side center>
-                R$ {{$store.state.modulos.totalReceitas}}
+                R$ {{totalReceitas}}
             </q-item-section>
         </q-item>    
     </q-list>
@@ -81,14 +81,16 @@ export default {
   },
   filters: {
     formataData(data) {
-      console.log(data);
       let dt = new Date(data);
       return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
     }
   },
   computed: {
       receitas() {
-          return this.$store.state.modulos.receitas;
+          return this.$store.getters['modulos/getReceitas']
+      },
+      totalReceitas() {
+          return this.$store.getters['modulos/getTotalReceitas']
       }
   },
   beforeMount() {
@@ -96,7 +98,7 @@ export default {
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Receitas')
-      this.$store.commit('modulos/totalReceitas', this.calculaTotal(this.$store.state.modulos.receitas))
+      this.$store.dispatch('modulos/getReceitas')
   }
 }
 </script>

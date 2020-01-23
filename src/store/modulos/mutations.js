@@ -13,6 +13,19 @@ export const addDespesa = (state, despesa) => {
 export const addReceita = (state, receita) => {
     state.receitas.push(receita)
 }
+
+export const setReceitas = (state, receitas) => {
+    state.receitas = receitas
+}
+
+export const setDespesas = (state, despesas) => {
+    state.despesas = despesas
+}
+
+export const setTiposDespesa = (state, tiposDespesa) => {
+    state.tiposDespesa = tiposDespesa
+}
+
 export const totalDespesas = (state, valor) => {
     state.totalDespesas = valor;
 }
