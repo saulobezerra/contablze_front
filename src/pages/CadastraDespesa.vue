@@ -90,7 +90,7 @@ export default {
           qtde_insumo: null,
           local: '',
           valorUnitario: null,
-          data: new Date()
+          data: ''
         },
         tipoDespesa: ''
       }
@@ -149,14 +149,9 @@ export default {
       this.despesa.data = dt.getFullYear() + "-" + mes + "-" + dia;
     },
     formataData(data) {
-      let dt = new Date(data);
-      let mes = dt.getMonth()+1;
-      let dia = dt.getDate();
-
-      dia = (dia < 10 ? '0' + dia : dia);
-      mes = (mes < 10 ? '0' + mes : mes);
-
-      return dt.getFullYear() + "-" + mes + "-" + dia;
+      let parseData = data.split('/'); 
+      parseData = parseData[2] + '-' + parseData[1] + '-' + parseData[0]; //yyyy-mm-dd
+      return parseData;
     },
 
     onSubmit() {
@@ -168,8 +163,14 @@ export default {
       });
 
       this.despesa.valorUnitario = parseFloat(this.despesa.valorUnitario);
+
+      let parseData = this.despesa.data.split('-'); //yyyy-mm-dd
+      this.despesa.data = new Date(+parseData[0], parseData[1]-1, +parseData[2]);
+
+      console.log('1'+2+3);
+      console.log(1+2+'3');
       
-      console.log(this.despesa);
+      console.log(this.despesa.data);
       if (this.$route.name == 'editarDespesa') {
         let parametrosDaRequisicao = {
           idDespesa: this.$route.params.id,

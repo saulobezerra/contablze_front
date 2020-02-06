@@ -47,6 +47,14 @@
         hint="Observação"
       />
 
+      <q-input 
+        type="date"
+        rounded
+        filled
+        color="pink-10"
+        v-model="receita.dataReceita" 
+        hint="Data da receita" />
+
       <!-- <q-input
         rounded
         filled
@@ -80,6 +88,7 @@ export default {
           observacao: '',
           qtdeProduto: null,
           isPago: false,
+          dataReceita: '',
           produto: {
             id: null
           }
@@ -119,14 +128,46 @@ export default {
           this.receita.qtdeProduto = obj.qtdeProduto
           this.receita.isPago = obj.isPago
           this.receita.observacao = obj.observacao
+          this.receita.dataReceita = this.formataData(obj.dataReceita)
           obj.isPago ? this.situacao = this.situacoes[1] : this.situacao = this.situacoes[0]
           this.produto = obj.produto.nome
 
       }else {
         this.$store.commit('modulos/setTitulo', 'Cadastro de Receita');
+        this.dataAtual();
       }
   },
   methods: {
+    dataAtual() {
+      let dt = new Date();
+      let mes = dt.getMonth()+1;
+      let dia = dt.getDate();
+
+      dia = (dia < 10 ? '0' + dia : dia);
+      mes = (mes < 10 ? '0' + mes : mes);
+
+      this.receita.dataReceita = dt.getFullYear() + "-" + mes + "-" + dia;
+    },
+    formataData(data) {
+      let dt;
+      
+      if (data) {
+        let dataParse = data.split('/');
+        dt = new Date(+dataParse[2], dataParse[1]-1, +dataParse[0]);  // Cria um tipo date com o instant 'data' da receita vinda do servidor
+      }
+      else {
+        dt = new Date();  // Cria um tipo date com a data atual
+      }
+
+      let mes = dt.getMonth()+1;
+      let dia = dt.getDate();
+
+      dia = (dia < 10 ? '0' + dia : dia);
+      mes = (mes < 10 ? '0' + mes : mes);
+
+      return dt.getFullYear() + "-" + mes + "-" + dia;
+    },
+
     onSubmit() {
       let objProduto = new Object();
       this.produtos.forEach(element => {
@@ -137,7 +178,10 @@ export default {
       this.receita.produto  = objProduto;
 
       this.situacao == 'Pendente' ? this.receita.isPago = false : this.receita.isPago = true;
-
+      
+      let parseData = this.receita.dataReceita.split('-'); //yyyy-mm-dd
+      this.receita.dataReceita = new Date(+parseData[0], parseData[1]-1, +parseData[2]);
+      
       if (this.$route.name == 'editarReceita') {
         let parametrosDaRequisicao = {
           idReceita: this.$route.params.id,
@@ -155,15 +199,16 @@ export default {
       if(this.$route.name == 'editarReceita') {
         this.$router.go(-1)
       }else{
-        this. receita = {
+        this.receita = {
           nomeCliente: '',
-            observacao: '',
-            qtdeProduto: null,
-            isPago: false,
-            produto: {
-              id: null
-            }
+          observacao: '',
+          qtdeProduto: null,
+          isPago: false,
+          produto: {
+            id: null
+          }
         }
+        dataAtual();
         this.produto = null;
         this.situacao = null;
       }

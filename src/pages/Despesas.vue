@@ -22,7 +22,7 @@
             <span class="text-body2"> {{despesa.local}} </span>
             <br>
             <span class="text-weight-bold text-body2">Data: </span>
-            <span class="text-body2"> {{despesa.data | formataData}} </span>    
+            <span class="text-body2"> {{despesa.data}} </span>    
             <br>   
             <span class="text-weight-bold text-body2">Valor Unitário: </span>
             <span class="text-body2"> {{ despesa.valorUnitario.toFixed(2) }} </span>
@@ -67,12 +67,12 @@ export default {
         buttonAdd: true
       }
   },
-  filters: {
-    formataData(data) {
-      let dt = new Date(data);
-      return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
-    }
-  },
+  // filters: {
+  //   formataData(data) {
+  //     let dt = new Date(data);
+  //     return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
+  //   }
+  // },
   computed: {
       despesas() {
         return this.$store.getters['modulos/getDespesas']

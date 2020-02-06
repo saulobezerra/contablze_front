@@ -12,13 +12,14 @@
         </q-item-section> -->
 
         <q-item-section >
+          <!-- <q-radio dense v-model="shape" val="line" label="Line" /> -->
           <q-item-label lines="1" class="text-weight-bold text-body1"> {{receita.produto.nome}} </q-item-label>
           <q-item-label caption lines="4">
             <span class="text-weight-bold text-body2">Comprador: </span>
             <span class="text-body2"> {{receita.nomeCliente}} </span>
             <br>
             <span class="text-weight-bold text-body2">Data: </span>
-            <span class="text-body2"> {{receita.dataReceita | formataData}} </span>    
+            <span class="text-body2"> {{receita.dataReceita}} </span>    
             <br>   
             <span class="text-weight-bold text-body2">Situação: </span>
             <span class="text-body2"> {{ receita.isPago ? "Pago" : "Pendente" }} </span>
@@ -77,14 +78,9 @@ export default {
   mixins: [Global],
   data() {
       return {
-        buttonAdd: true
+        buttonAdd: true,
+        // shape: ''
       }
-  },
-  filters: {
-    formataData(data) {
-      let dt = new Date(data);
-      return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
-    }
   },
   computed: {
       receitas() {

@@ -14,7 +14,7 @@
         <q-toolbar-title class="text-center text-bold">
           {{titulo}}
         </q-toolbar-title>
-
+        <q-icon v-if="exibeArrowBack" size="sm" name="arrow_back" @click="$router.go(-1)" />
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
@@ -91,6 +91,9 @@
 </template>
 
 <script>
+
+//import {arrow_back} from '@quasar/extras/material-icons'
+
 export default {
   name: 'MyLayout',
 
@@ -102,6 +105,13 @@ export default {
   computed: {
     titulo() {
       return this.$store.state.modulos.titulo;
+    },
+    exibeArrowBack() {
+      let rota = this.$route.name;
+      if(rota == 'login' || rota == 'menu')
+        return false;
+      else
+        return true;
     }
   }
 }

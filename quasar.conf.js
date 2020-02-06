@@ -43,7 +43,8 @@ module.exports = function (ctx) {
       all: 'auto',
 
       components: [
-        'QForm'
+        'QForm',
+        'QIcon'
       ],
       directives: [],
 
