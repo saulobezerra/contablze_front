@@ -55,19 +55,9 @@
         v-model="receita.dataReceita" 
         hint="Data da receita" />
 
-      <!-- <q-input
-        rounded
-        filled
-        color="pink-10"
-        v-model="receita.data"
-        label="Data"
-        hint="Data da receita"
-        lazy-rules
-        :rules="[ val => val && val.length > 0 || 'Informe a data da sua receita.']"
-      /> --> 
 
       <div v-if="$route.name == 'editarReceita'" class="full-width q-mt-lg q-gutter-x-xs" >
-        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
+        <q-btn outline rounded class="glossy half-width" label="Excluir" type="reset" color="pink-10" />
         <q-btn rounded class="glossy half-width" label="Salvar" type="submit" color="pink-10"/>
       </div>
 
@@ -76,6 +66,20 @@
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
     </q-form>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <!-- <q-avatar icon="signal_wifi_off" color="primary" text-color="white" /> -->
+          <span class="q-ml-sm">Você deseja realmente excluir essa receita?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn flat label="Sim" color="primary" v-close-popup @click="excluiReceita" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   </div>
 </template>
@@ -95,7 +99,8 @@ export default {
         },
         produto: null,  
         situacao: '',
-        situacoes:['Pendente', 'Pago']
+        situacoes:['Pendente', 'Pago'],
+        confirm: false
       }
   },
   filters: {
@@ -148,6 +153,7 @@ export default {
 
       this.receita.dataReceita = dt.getFullYear() + "-" + mes + "-" + dia;
     },
+
     formataData(data) {
       let dt;
       
@@ -166,6 +172,15 @@ export default {
       mes = (mes < 10 ? '0' + mes : mes);
 
       return dt.getFullYear() + "-" + mes + "-" + dia;
+    },
+
+    excluiReceita() {
+      console.log(this.$route.params.id)
+      this.$store.dispatch('modulos/deletarReceita', this.$route.params.id).then(() => {
+        this.$router.go(-1);
+      }).catch(error => {
+        console.log("Erro na exclusão",error);
+      });
     },
 
     onSubmit() {
@@ -193,11 +208,12 @@ export default {
         this.$store.dispatch('modulos/gravaReceita', this.receita)
       }
     
-      this.$router.replace({name: "receitas"})
-    },
+      this.$router.go(-1);
+    }, 
+
     onReset() {
       if(this.$route.name == 'editarReceita') {
-        this.$router.go(-1)
+        this.confirm = true;
       }else{
         this.receita = {
           nomeCliente: '',

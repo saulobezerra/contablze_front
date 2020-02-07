@@ -78,8 +78,7 @@ export default {
   mixins: [Global],
   data() {
       return {
-        buttonAdd: true,
-        // shape: ''
+        buttonAdd: true
       }
   },
   computed: {

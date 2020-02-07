@@ -4,7 +4,7 @@
     <q-list separator inset >
 
       <q-item clickable v-ripple v-for="despesa in despesas" :key="despesa.id" 
-      :to="{name: 'editarDespesa', params:{id: despesa.id}}" >
+      :to="{name: 'editarDespesa', params:{id: despesa.id}}">
         <!-- <q-item-section avatar>
           <q-avatar>
             <img src="https://cdn.quasar.dev/img/avatar2.jpg">
@@ -67,12 +67,6 @@ export default {
         buttonAdd: true
       }
   },
-  // filters: {
-  //   formataData(data) {
-  //     let dt = new Date(data);
-  //     return dt.getDate() + "/" + (dt.getMonth()+1) + "/" + dt.getFullYear();
-  //   }
-  // },
   computed: {
       despesas() {
         return this.$store.getters['modulos/getDespesas']

@@ -44,7 +44,7 @@ export default {
   },
   computed: {
       produtos() {
-          return this.$store.state.modulos.produtos;
+          return this.$store.getters['modulos/getProdutos']
       }
   },
   beforeMount() {
@@ -54,6 +54,7 @@ export default {
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Produtos')
+      this.$store.dispatch('modulos/getProdutos')
   }
 }
 </script>

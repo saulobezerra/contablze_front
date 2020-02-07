@@ -33,7 +33,7 @@
       />
 
       <div v-if="$route.name == 'editarProduto'" class="full-width q-mt-lg q-gutter-x-xs" >
-        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
+        <q-btn outline rounded class="glossy half-width" label="Excluir" type="reset" color="pink-10" />
         <q-btn rounded class="glossy half-width" label="Salvar" type="submit" color="pink-10"/>
       </div>
 
@@ -44,6 +44,20 @@
 
     </q-form>
 
+        <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row items-center">
+          <!-- <q-avatar icon="signal_wifi_off" color="primary" text-color="white" /> -->
+          <span class="q-ml-sm">Você deseja realmente excluir esse produto?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="primary" v-close-popup />
+          <q-btn flat label="Sim" color="primary" v-close-popup @click="excluiProduto" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 <script>
@@ -53,7 +67,8 @@ export default {
         produto: {
             nome: '',
             valor: null
-        }  
+        },
+        confirm: false
       }
   },
   
@@ -72,6 +87,15 @@ export default {
       }
   },
   methods: {
+    excluiProduto() {
+      console.log(this.$route.params.id)
+      this.$store.dispatch('modulos/deletarProduto', this.$route.params.id).then(() => {
+        this.$router.go(-1);
+      }).catch(error => {
+        console.log("Erro na exclusão",error);
+      });
+    },
+
     onSubmit() {
       this.produto.valor = parseFloat(this.produto.valor);
       
@@ -84,11 +108,11 @@ export default {
       }else {
           this.$store.dispatch('modulos/gravaProduto', this.produto )
       }
-      this.$router.replace({name: "produtos"})
+      this.$router.go(-1)
     },
     onReset() {
       if (this.$route.name == 'editarProduto') {
-        this.$router.go(-1)
+        this.confirm = true
       }else {
         this.produto.nome = '';
         this.produto.valor = null;

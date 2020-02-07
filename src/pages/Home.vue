@@ -26,7 +26,6 @@ export default {
   },
   mounted() {
     this.$store.commit('modulos/setTitulo', 'Menu');
-
     this.$store.dispatch('modulos/getProdutos')
   }
 }

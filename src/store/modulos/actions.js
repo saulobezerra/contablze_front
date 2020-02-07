@@ -26,7 +26,7 @@ export function login(state, dadosLogin) {
             resolve(true)
         })
         .catch(function (error) {
-            reject(error)
+            reject(error.response.data)
         })
     })
 }
@@ -41,8 +41,7 @@ export function gravaUsuario(state, usuario) {
             resolve(true)
         })
         .catch( (error) => {
-            //console.log(error);
-            reject(error)
+            reject(error.response.data)
         })
     }) 
 }
@@ -62,7 +61,7 @@ export function getReceitas (state) {
         state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
 	})
 	.catch(function (error) {
-    	console.log(error);
+    	console.log(error.response.data);
   });
 }
 
@@ -76,7 +75,7 @@ export function gravaReceita (state, receita) {
         state.dispatch('getReceitas')
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
 
@@ -87,7 +86,7 @@ export function editarReceita (state, parametrosDaRequisicao) {
 
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
 
@@ -98,7 +97,7 @@ export function editarDespesa (state, parametrosDaRequisicao) {
         state.dispatch('getDespesas')
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 
 }
@@ -113,7 +112,7 @@ export function gravaProduto(state, produto) {
         state.commit('addProduto', resp.data)
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
 
@@ -127,7 +126,7 @@ export function gravaDespesa(state, despesa) {
         state.dispatch('getDespesas')
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
 
@@ -140,9 +139,48 @@ export function getDespesas(state) {
         state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
+
+export function deletarDespesa(state, idDespesa) {
+
+    return new Promise((resolve, reject) => {  
+        axios.delete('/despesas/'+idDespesa)
+        .then( () => {
+            resolve()
+        })
+        .catch(error => {
+            reject(error.response.data)
+        })
+    }) 
+}
+
+export function deletarReceita(state, idReceita) {
+
+    return new Promise((resolve, reject) => {  
+        axios.delete('/receitas/'+idReceita)
+        .then( () => {
+            resolve()
+        })
+        .catch(error => {
+            reject(error.response.data)
+        })
+    }) 
+} deletarProduto
+
+export function deletarProduto(state, idProduto) {
+
+    return new Promise((resolve, reject) => {  
+        axios.delete('/produtos/'+idProduto)
+        .then( () => {
+            resolve()
+        })
+        .catch(error => {
+            reject(error.response.data)
+        })
+    }) 
+} 
 
 export function getTiposDespesas (state) {
     axios.get('/tiposDespesa')
@@ -152,7 +190,7 @@ export function getTiposDespesas (state) {
 
     })
     .catch(error => {
-        console.log(error);
+        console.log(error.response.data);
     })
 }
 
@@ -164,7 +202,7 @@ export function editaProduto(state, parametrosDaRequisicao) {
         state.dispatch('getProdutos')
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
 
@@ -174,6 +212,6 @@ export function getProdutos(state) {
         state.commit('setProdutos', resp.data)
     })
     .catch(error => {
-        console.log(error)
+        console.log(error.response.data)
     })
 }
