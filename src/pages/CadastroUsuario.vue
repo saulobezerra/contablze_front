@@ -96,7 +96,7 @@ export default {
       
       if(this.$store.state.modulos.user) {
         this.$store.commit('modulos/setTitulo', 'Meus dados');
-        this.usuario = this.$store.state.modulos.user;
+        this.usuario = this.$store.getters['modulos/getUsuario']
       }
   },
   methods: {

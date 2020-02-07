@@ -69,14 +69,14 @@
 
     <q-dialog v-model="confirm" persistent>
       <q-card>
-        <q-card-section class="row items-center">
-          <!-- <q-avatar icon="signal_wifi_off" color="primary" text-color="white" /> -->
-          <span class="q-ml-sm">Você deseja realmente excluir essa receita?</span>
+        <q-card-section class="row">
+          <q-avatar icon="delete" color="pink-10" text-color="white" />
+          <span class="col-9 q-ml-sm q-mt-sm  ">Você deseja realmente excluir essa receita?</span>
         </q-card-section>
 
         <q-card-actions align="right">
-          <q-btn flat label="Não" color="primary" v-close-popup />
-          <q-btn flat label="Sim" color="primary" v-close-popup @click="excluiReceita" />
+          <q-btn flat label="Não" color="pink-10" v-close-popup />
+          <q-btn flat label="Sim" color="pink-10" v-close-popup @click="excluiReceita" />
         </q-card-actions>
       </q-card>
     </q-dialog>
