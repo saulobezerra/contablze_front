@@ -28,7 +28,7 @@ export const setTiposDespesa = (state, tiposDespesa) => {
 
 export const totalDespesas = (state, valor) => {
     state.totalDespesas = valor;
-}
+}// setLucrosDefault
 export const totalReceitas = (state, valor) => {
     state.totalReceitas = valor;
 }//addProduto
@@ -49,3 +49,7 @@ export const editaProduto = (state, produto) => {
         }
     }
 }
+
+export const setLucrosDefault = (state, lucros) => {
+    state.lucros = lucros;
+}// setLucrosDefault

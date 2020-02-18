@@ -25,3 +25,7 @@ export function getTotalReceitas(state) {
 export function getTotalDespesas(state) {
     return state.totalDespesas
 }
+
+export function getLucrosDefault(state) {
+    return state.lucros
+}

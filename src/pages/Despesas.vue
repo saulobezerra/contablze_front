@@ -79,6 +79,7 @@ export default {
     this.buttonAdd = this.$route.path.search('lucro') >= 0 ? false : true;
   },
   mounted() {
+      this.despesas
       this.$store.commit('modulos/setTitulo', 'Despesas')
       this.$store.dispatch('modulos/getDespesas')
   }

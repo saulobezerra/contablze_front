@@ -1,63 +1,67 @@
 <template>
 
   <div class="q-pa-sm q-mt-sm q-gutter-y-xs">
-    <q-list separator inset >
 
-      <q-item clickable v-ripple @click="$router.push({name: 'receita'})">
+    <div v-for="(lucro, i) in lucros" :key="i">
+      <span class="text-bold"> {{ mes[lucro.mes -1] }} </span>
+      <q-list separator inset >
 
-        <q-item-section >
-          <q-item-label lines="1"> Receitas </q-item-label>
-        </q-item-section>
+        <q-item clickable v-ripple @click="$router.push({name: 'receita'})">
+          <q-item-section >
+            <q-item-label lines="1"> Receitas </q-item-label>
+          </q-item-section>
+          <q-item-section side center>
+            {{lucro.totalReceita}}
+          </q-item-section>
+        </q-item>
 
-        <q-item-section side center>
-          {{$store.state.modulos.totalReceitas}}
-        </q-item-section>
-        
-      </q-item>
+        <q-item clickable v-ripple @click="$router.push({name: 'despesas'})">
+          <q-item-section >
+            <q-item-label lines="1"> Despesas </q-item-label>
+          </q-item-section>
+          <q-item-section side center>
+            {{lucro.totalDespesa}}
+          </q-item-section>
+        </q-item>
+        <!-- <q-separator inset color="pink-10" /> -->
+      </q-list>
 
-      <q-item clickable v-ripple @click="$router.push({name: 'despesas'})">
+      <q-list class="total text-bold" style="margin-bottom: 10%">
+          <q-item >
+          <q-item-section >
+            <q-item-label lines="1"> Lucro </q-item-label>
+          </q-item-section>
+          <q-item-section side center>
+            {{lucro.vLucro}}
+          </q-item-section>        
+        </q-item>
+        <q-separator color="pink-10" />
+      </q-list>
 
-        <q-item-section >
-          <q-item-label lines="1"> Despesas </q-item-label>
-        </q-item-section>
+    </div>
 
-        <q-item-section side center>
-          {{$store.state.modulos.totalDespesas}}
-        </q-item-section>
-        
-      </q-item>
-      <!-- <q-separator inset color="pink-10" /> -->
-    </q-list>
-
-    <q-separator color="pink-10" />
-    
-    <q-list class="total text-bold">
-        <q-item >
-
-        <q-item-section >
-          <q-item-label lines="1"> Lucro </q-item-label>
-        </q-item-section>
-
-        <q-item-section side center>
-          {{lucro}}
-        </q-item-section>
-        
-      </q-item>    
-    </q-list>
   </div>
 </template>
 <script>
-import Global from '../mixins/Global'
+
 export default {
-    mixins: [Global],
+
+  data(){
+    return {
+      mes:['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro',
+          'Novembro', 'Dezembro']
+    }
+  },
+
     computed: {
-        lucro() {
-            return this.$store.state.modulos.totalReceitas - this.$store.state.modulos.totalDespesas;
+        lucros() {
+          return this.$store.getters['modulos/getLucrosDefault']
         }
     },
     mounted() {
-        this.$store.commit('modulos/totalReceitas', this.calculaTotal(this.$store.state.modulos.receitas))
-        this.$store.commit('modulos/totalDespesas', this.calculaTotal(this.$store.state.modulos.despesas)); 
+      this.lucros;
+      this.$store.commit('modulos/setTitulo', 'Lucros')
+      this.$store.dispatch('modulos/getLucrosDefault');
     }
 }
 </script>
@@ -67,7 +71,7 @@ export default {
     background-color: blue
 }
 .total{
-  background-color: rgb(253, 216, 53);
+  /* background-color: rgb(253, 250, 53); */
   margin-bottom: 25%;
 }
 

@@ -72,7 +72,7 @@ export function gravaReceita (state, receita) {
     axios.post('/receitas', receita)
     .then(resp => {
         console.log('Receita cadastrada com sucesso' , resp)
-        state.dispatch('getReceitas')
+        //state.dispatch('getReceitas')
     })
     .catch(error => {
         console.log(error.response.data)
@@ -94,7 +94,7 @@ export function editarDespesa (state, parametrosDaRequisicao) {
     axios.put('/despesas/' + parametrosDaRequisicao.idDespesa, parametrosDaRequisicao.despesa)
     .then(resp => {
         console.log('Despesa alterada com sucesso', resp.data)
-        state.dispatch('getDespesas')
+        //state.dispatch('getDespesas')
     })
     .catch(error => {
         console.log(error.response.data)
@@ -123,7 +123,7 @@ export function gravaDespesa(state, despesa) {
     axios.post('/despesas', despesa)
     .then(resp => {
         console.log(resp.data)
-        state.dispatch('getDespesas')
+        //state.dispatch('getDespesas')
     })
     .catch(error => {
         console.log(error.response.data)
@@ -210,6 +210,18 @@ export function getProdutos(state) {
     axios.get('/produtos/usuario/'+ idUsuario)
     .then((resp) => {
         state.commit('setProdutos', resp.data)
+    })
+    .catch(error => {
+        console.log(error.response.data)
+    })
+}
+
+export function getLucrosDefault(state) {
+    idUsuario =  Global.methods.getIdUsuario()
+    axios.get('/lucros/default/' + idUsuario)
+    .then(resp => {
+        console.log(resp)
+        state.commit('setLucrosDefault', resp.data)
     })
     .catch(error => {
         console.log(error.response.data)
