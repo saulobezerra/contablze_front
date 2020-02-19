@@ -53,3 +53,4 @@ export const editaProduto = (state, produto) => {
 export const setLucrosDefault = (state, lucros) => {
     state.lucros = lucros;
 }// setLucrosDefault
+

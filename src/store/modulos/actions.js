@@ -16,7 +16,7 @@ export function someAction (/* context */) {
 
 export function login(state, dadosLogin) {
 
-    return new Promise((resolve, reject) => {    
+    return new Promise((resolve, reject) => {
         let login = dadosLogin.login;
         let senha = dadosLogin.senha;
         axios.get('/usuarios/login/'+login+'/'+senha).then((resp) => {
@@ -56,7 +56,17 @@ export function getUsers() {
 export function getReceitas (state) {
     axios.get('/receitas/usuario/'+idUsuario)
 	.then((resp) => {
-        console.log(resp.data)
+        state.commit('setReceitas', resp.data)
+        state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
+	})
+	.catch(function (error) {
+    	console.log(error.response.data);
+  });
+}
+
+export function getReceitasPorMes (state, periodo) {
+    axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
+	.then((resp) => {
         state.commit('setReceitas', resp.data)
         state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
 	})
@@ -108,7 +118,6 @@ export function gravaProduto(state, produto) {
 
     axios.post('/produtos', produto)
     .then(resp => {
-        console.log(resp)
         state.commit('addProduto', resp.data)
     })
     .catch(error => {
@@ -122,7 +131,6 @@ export function gravaDespesa(state, despesa) {
     console.log(despesa)
     axios.post('/despesas', despesa)
     .then(resp => {
-        console.log(resp.data)
         //state.dispatch('getDespesas')
     })
     .catch(error => {
@@ -131,17 +139,29 @@ export function gravaDespesa(state, despesa) {
 }
 
 export function getDespesas(state) {
-    idUsuario =  Global.methods.getIdUsuario()
+    idUsuario =  state.getters.getUsuario.id
     axios.get('/despesas/usuario/' + idUsuario)
     .then(resp => {
-        console.log(resp)
         state.commit('setDespesas', resp.data)
         state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
     })
     .catch(error => {
         console.log(error.response.data)
     })
-}
+} 
+
+export function getDespesasPorMes(state, periodo) {
+    //idUsuario =  Global.methods.getIdUsuario()
+    idUsuario =  state.getters.getUsuario.id
+    axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
+    .then(resp => {
+        state.commit('setDespesas', resp.data)
+        state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
+    })
+    .catch(error => {
+        console.log(error.response.data)
+    })
+} 
 
 export function deletarDespesa(state, idDespesa) {
 
@@ -167,7 +187,7 @@ export function deletarReceita(state, idReceita) {
             reject(error.response.data)
         })
     }) 
-} deletarProduto
+}
 
 export function deletarProduto(state, idProduto) {
 
@@ -195,8 +215,6 @@ export function getTiposDespesas (state) {
 }
 
 export function editaProduto(state, parametrosDaRequisicao) {
-    console.log(state.getters['getUsuario'])
-    console.log(parametrosDaRequisicao)
     axios.put('/produtos/'+parametrosDaRequisicao.idProd, parametrosDaRequisicao.produto)
     .then((resp) => {
         state.dispatch('getProdutos')
@@ -217,10 +235,10 @@ export function getProdutos(state) {
 }
 
 export function getLucrosDefault(state) {
-    idUsuario =  Global.methods.getIdUsuario()
-    axios.get('/lucros/default/' + idUsuario)
+    //idUsuario =  Global.methods.getIdUsuario()
+    idUsuario =  state.getters.getUsuario.id
+    axios.get('/lucros/usuario/' + idUsuario + '/default')
     .then(resp => {
-        console.log(resp)
         state.commit('setLucrosDefault', resp.data)
     })
     .catch(error => {

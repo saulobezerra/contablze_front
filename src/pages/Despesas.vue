@@ -81,7 +81,12 @@ export default {
   mounted() {
       this.despesas
       this.$store.commit('modulos/setTitulo', 'Despesas')
-      this.$store.dispatch('modulos/getDespesas')
+
+      if(this.$route.params.mes && this.$route.params.ano ){
+        this.$store.dispatch('modulos/getDespesasPorMes', this.$route.params)
+      }else{
+        this.$store.dispatch('modulos/getDespesas')
+      }
   }
 }
 </script>

@@ -98,7 +98,12 @@ export default {
   mounted() {
       this.receitas
       this.$store.commit('modulos/setTitulo', 'Receitas')
-      this.$store.dispatch('modulos/getReceitas')
+
+      if(this.$route.params.mes && this.$route.params.ano ){
+        this.$store.dispatch('modulos/getReceitasPorMes', this.$route.params)
+      }else{
+        this.$store.dispatch('modulos/getReceitas')
+      }
   }
 }
 </script>

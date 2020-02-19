@@ -8,6 +8,7 @@ export default {
   totalDespesas: 0,
   totalReceitas: 0,
   lucros: [],
+  mes: 0,
   user: undefined
 
 }

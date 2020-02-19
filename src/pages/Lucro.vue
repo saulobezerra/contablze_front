@@ -3,10 +3,10 @@
   <div class="q-pa-sm q-mt-sm q-gutter-y-xs">
 
     <div v-for="(lucro, i) in lucros" :key="i">
-      <span class="text-bold"> {{ mes[lucro.mes -1] }} </span>
+      <span class="row justify-center text-bold" style="color: rgb(136, 14, 79)"> {{ mes[lucro.mes -1] }} </span>
       <q-list separator inset >
 
-        <q-item clickable v-ripple @click="$router.push({name: 'receita'})">
+        <q-item clickable v-ripple @click="carregaPagina('receitasPorMes',lucro.mes, lucro.ano)">
           <q-item-section >
             <q-item-label lines="1"> Receitas </q-item-label>
           </q-item-section>
@@ -15,7 +15,7 @@
           </q-item-section>
         </q-item>
 
-        <q-item clickable v-ripple @click="$router.push({name: 'despesas'})">
+        <q-item clickable v-ripple @click="carregaPagina('despesasPorMes', lucro.mes, lucro.ano)">
           <q-item-section >
             <q-item-label lines="1"> Despesas </q-item-label>
           </q-item-section>
@@ -31,7 +31,7 @@
           <q-item-section >
             <q-item-label lines="1"> Lucro </q-item-label>
           </q-item-section>
-          <q-item-section side center>
+          <q-item-section side center style="color: rgb(136, 14, 79)">
             {{lucro.vLucro}}
           </q-item-section>        
         </q-item>
@@ -62,7 +62,18 @@ export default {
       this.lucros;
       this.$store.commit('modulos/setTitulo', 'Lucros')
       this.$store.dispatch('modulos/getLucrosDefault');
-    }
+    },
+
+    methods:{
+      carregaPagina(pagina, mes, ano) {
+        let objMesAno= {
+          mes: mes,
+          ano: ano
+        }
+        this.$router.push({name: pagina, params:{mes: mes, ano: ano}});
+      }
+  }
+    
 }
 </script>
 <style>
@@ -71,7 +82,7 @@ export default {
     background-color: blue
 }
 .total{
-  /* background-color: rgb(253, 250, 53); */
+  color: rgb(136, 14, 79);
   margin-bottom: 25%;
 }
 
