@@ -1,13 +1,19 @@
 // import Vue from 'vue'
 import Axios from "axios";
 import Global from '../../mixins/Global'
-import { setDespesas } from "./mutations";
+
 
 const axios = Axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://192.168.0.105:8080',
     timeout: 20000,
     // headers: {'X-Custom-Header': 'foobar'}
   });
+
+//   axios.interceptors.response.use(function (response) {
+//     return response;
+//   }, function (error) {
+//     return Promise.reject(error);
+//   });
 
 var idUsuario = 0;
 
@@ -26,6 +32,9 @@ export function login(state, dadosLogin) {
             resolve(true)
         })
         .catch(function (error) {
+            ///console.log("Setandoo variável de erro")
+            state.commit('setMensagemErro', error.response.data.message);
+            //console.log(state.getters['getMensagemErro']);
             reject(error.response.data)
         })
     })
@@ -41,6 +50,7 @@ export function gravaUsuario(state, usuario) {
             resolve(true)
         })
         .catch( (error) => {
+            state.commit('setMensagemErro', error.response.data.message);
             reject(error.response.data)
         })
     }) 
@@ -60,7 +70,8 @@ export function getReceitas (state) {
         state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
 	})
 	.catch(function (error) {
-    	console.log(error.response.data);
+        console.log(error.response.data);
+        state.commit('setMensagemErro', error.response.data.message);
   });
 }
 
@@ -71,7 +82,8 @@ export function getReceitasPorMes (state, periodo) {
         state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
 	})
 	.catch(function (error) {
-    	console.log(error.response.data);
+        console.log(error.response.data);
+        state.commit('setMensagemErro', error.response.data.message);
   });
 }
 
@@ -86,6 +98,7 @@ export function gravaReceita (state, receita) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -97,6 +110,7 @@ export function editarReceita (state, parametrosDaRequisicao) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -108,6 +122,7 @@ export function editarDespesa (state, parametrosDaRequisicao) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 
 }
@@ -122,6 +137,7 @@ export function gravaProduto(state, produto) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -135,6 +151,7 @@ export function gravaDespesa(state, despesa) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -147,6 +164,7 @@ export function getDespesas(state) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 } 
 
@@ -160,6 +178,7 @@ export function getDespesasPorMes(state, periodo) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 } 
 
@@ -172,6 +191,7 @@ export function deletarDespesa(state, idDespesa) {
         })
         .catch(error => {
             reject(error.response.data)
+            state.commit('setMensagemErro', error.response.data.message);
         })
     }) 
 }
@@ -185,6 +205,7 @@ export function deletarReceita(state, idReceita) {
         })
         .catch(error => {
             reject(error.response.data)
+            state.commit('setMensagemErro', error.response.data.message);
         })
     }) 
 }
@@ -198,6 +219,7 @@ export function deletarProduto(state, idProduto) {
         })
         .catch(error => {
             reject(error.response.data)
+            state.commit('setMensagemErro', error.response.data.message);
         })
     }) 
 } 
@@ -211,6 +233,7 @@ export function getTiposDespesas (state) {
     })
     .catch(error => {
         console.log(error.response.data);
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -221,6 +244,7 @@ export function editaProduto(state, parametrosDaRequisicao) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -231,6 +255,7 @@ export function getProdutos(state) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }
 
@@ -243,5 +268,6 @@ export function getLucrosDefault(state) {
     })
     .catch(error => {
         console.log(error.response.data)
+        state.commit('setMensagemErro', error.response.data.message);
     })
 }

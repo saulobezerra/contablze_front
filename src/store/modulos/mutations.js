@@ -52,5 +52,9 @@ export const editaProduto = (state, produto) => {
 
 export const setLucrosDefault = (state, lucros) => {
     state.lucros = lucros;
-}// setLucrosDefault
+}
+
+export const setMensagemErro = (state, msgErro) => {
+    state.msgError = msgErro;
+}
 

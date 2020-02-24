@@ -29,3 +29,7 @@ export function getTotalDespesas(state) {
 export function getLucrosDefault(state) {
     return state.lucros
 }
+
+export function getMensagemErro(state) {
+    return state.msgError
+}

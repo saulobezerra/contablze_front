@@ -111,10 +111,8 @@ export default {
 
       this.$store.dispatch('modulos/gravaUsuario', user ).then(r => {
         console.log("Cadastro realizado com sucesso")
+        //this.$store.commit('modulos/setMensagemErro', "Cadastro realizado com sucesso");
         this.$router.replace({name: "login"});
-      })
-      .catch(e => {
-        console.log("Erro ao cadastrar usuário. ", e)
       })
       
     },

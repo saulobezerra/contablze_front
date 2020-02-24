@@ -9,6 +9,7 @@ export default {
   totalReceitas: 0,
   lucros: [],
   mes: 0,
+  msgError: '',
   user: undefined
 
 }
