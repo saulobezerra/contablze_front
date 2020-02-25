@@ -57,4 +57,3 @@ export const setLucrosDefault = (state, lucros) => {
 export const setMensagemErro = (state, msgErro) => {
     state.msgError = msgErro;
 }
-

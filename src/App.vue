@@ -1,5 +1,5 @@
 <template>
-  <div id="q-app">
+  <div id="q-app" >
     <router-view />
     <ModalMsg/>
   </div>
@@ -13,12 +13,6 @@ export default {
   name: 'App',
   components:{
     ModalMsg
-  },
-  computed: {
-    "$store.getters['modulos/getMensagemErro']"() {
-      console.log(this.$store.getters['modulos/getMensagemErro'])
-      return this.$store.getters['modulos/getMensagemErro']
-    }
-  },
+  }
 }
 </script>

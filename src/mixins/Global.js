@@ -20,6 +20,18 @@ const Global = {
     },
     getIdUsuario() {
       return 1
+    },
+
+    trataErros(error) {
+      if(error.response == undefined){
+        if("Error: Network Error" == error)
+          return 'Erro de conexão de rede.'
+        else
+          return 'Algo deu errado.'
+      }
+      else{
+        return error.response.data.message;
+      }
     }
   }
 }
