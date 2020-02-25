@@ -10,11 +10,11 @@
           icon="menu"
           aria-label="Menu"
         /> -->
-
-        <q-toolbar-title class="text-center text-bold">
+        <q-icon v-if="exibeArrowBack" size="sm" name="arrow_back" @click="$router.go(-1)" style="position:absolute;"/>
+        <q-toolbar-title class="text-center text-bold" style="margin-left: -2%;">
           {{titulo}}
         </q-toolbar-title>
-        <q-icon v-if="exibeArrowBack" size="sm" name="arrow_back" @click="$router.go(-1)" />
+        
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
     </q-header>
