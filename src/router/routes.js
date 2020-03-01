@@ -5,8 +5,8 @@ const routes = [
     component: () => import('layouts/MyLayout.vue'),
     children: [
       // { path: '', component: () => import('pages/Index.vue') },
-      { path: '', name: 'login', component: () => import('pages/Login.vue') },
-      { path: '/menu', name: 'menu', component: () => import('pages/Home.vue') },
+      { path: 'login', name: 'login', component: () => import('pages/Login.vue') },
+      { path: '/', name: 'menu', component: () => import('pages/Home.vue') },
       { path: '/receitas', name: "receitas", component: () => import('pages/Receitas.vue') },
       { path: '/receitas/:mes/:ano', name: "receitasPorMes", component: () => import('pages/Receitas.vue') },
       { path: '/receitas/editar/:id', name: "editarReceita", component: () => import('pages/cadastraReceita.vue') },

@@ -25,9 +25,14 @@ export default {
         
       }
   },
+
   mounted() {
-    this.$store.commit('modulos/setTitulo', 'Menu');
-    this.$store.dispatch('modulos/getProdutos')
+    let usuario = this.$store.state.modulos.user;
+    if(usuario == undefined || usuario.nome == undefined )
+      this.$router.push({name: "login"});
+    else{
+      this.$store.commit('modulos/setTitulo', 'Menu');
+    }
   }
 }
 </script>

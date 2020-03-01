@@ -80,7 +80,7 @@ export default {
         } 
         this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
           console.log(resp)
-          this.$router.replace({name: 'menu'})
+          this.$router.go(-1)
         })
         .catch(err => {
           console.log(err)

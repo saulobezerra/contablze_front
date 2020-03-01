@@ -21,8 +21,8 @@
       },
       "build": {
         "cordova": {
-          "iconHash": "786557bb853e17bdd56607c68867878a",
-          "splashscreenHash": "786557bb853e17bdd56607c68867878a",
+          "iconHash": "4156ac735c5cc887f1e1c268f912b988",
+          "splashscreenHash": "807eede81940c8b73d9027f5031942f5",
           "splashscreenType": "pure",
           "backgroundColor": "#000074"
         }
