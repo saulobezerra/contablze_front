@@ -66,8 +66,8 @@
       />
       
       <div v-if="this.$store.state.modulos.user" class="full-width q-mt-lg q-gutter-x-xs" >
-        <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" />
-        <q-btn rounded class="glossy half-width" label="Editar" type="submit" color="pink-10"/>
+        <!-- <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" /> -->
+        <q-btn rounded class="glossy full-width" label="Editar" type="submit" color="pink-10"/>
       </div>
 
       <div v-else class="full-width q-mt-lg q-gutter-x-xs" >
@@ -113,6 +113,8 @@ export default {
         console.log("Cadastro realizado com sucesso")
         //this.$store.commit('modulos/setMensagemErro', "Cadastro realizado com sucesso");
         this.$router.replace({name: "login"});
+      }).catch(e => {
+        console.log(e);
       })
       
     },

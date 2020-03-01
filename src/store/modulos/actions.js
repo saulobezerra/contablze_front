@@ -60,6 +60,8 @@ export function getUsers() {
     console.log("request users");
     axios.get('/users').then((resp) => {
         console.log(resp.data);
+    }).catch(e => {
+        console.log(e);
     });
 }
 
