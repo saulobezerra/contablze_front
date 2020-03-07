@@ -67,7 +67,7 @@
       
       <div v-if="this.$store.state.modulos.user" class="full-width q-mt-lg q-gutter-x-xs" >
         <!-- <q-btn outline rounded class="glossy half-width" label="Voltar" type="reset" color="pink-10" /> -->
-        <q-btn rounded class="glossy full-width" label="Editar" type="submit" color="pink-10"/>
+        <q-btn rounded class="glossy full-width" label="Salvar" type="submit" color="pink-10"/>
       </div>
 
       <div v-else class="full-width q-mt-lg q-gutter-x-xs" >
@@ -75,6 +75,19 @@
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
     </q-form>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row">
+          <q-avatar icon="delete" color="pink-10" text-color="white" />
+          <span class="col-9 q-ml-sm q-mt-sm  ">{{msgModal}}</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="pink-10" v-close-popup @click="$router.go(-1)" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 
   </div>
 </template>
@@ -88,15 +101,19 @@ export default {
           email: '',
           senha: '',
         },
-        confirmaSenha: ''
+        confirmaSenha: '',
+        confirm: false,
+        msgModal: ''
       }
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Cadastro');
-      
-      if(this.$store.state.modulos.user) {
+      if(this.$store.getters['modulos/getUsuario']) {
         this.$store.commit('modulos/setTitulo', 'Meus dados');
         this.usuario = this.$store.getters['modulos/getUsuario']
+        this.usuario.senha = '******'
+      }else if(JSON.parse(localStorage.getItem('usuario'))) {
+        this.usuario = JSON.parse(localStorage.getItem('usuario'))
         this.usuario.senha = '******'
       }
   },
@@ -110,26 +127,25 @@ export default {
       }
 
       this.$store.dispatch('modulos/gravaUsuario', user ).then(r => {
-        console.log("Cadastro realizado com sucesso")
-        //this.$store.commit('modulos/setMensagemErro', "Cadastro realizado com sucesso");
-        this.$router.replace({name: "login"});
+        msgModal = 'Cadastro realizado com sucesso!'
+        confirm = true
       }).catch(e => {
-        console.log(e);
+        msgModal = 'Erro ao realizar cadastro'
+        confirm = true
       })
       
     },
     onReset() {
       if(this.$store.state.modulos.user) {
-        // Caso já esteja logado e acesse "Meus Dados" o botão 'Limpar' torna-se 'Voltar'
-        this.$router.replace({name: "menu"});
+        // Caso já esteja logado e acesse "Meus Dados" o botão 'Cancelar' torna-se 'Voltar'
+        //this.$router.go(-1);
       }else {
-        // Limpando variáveis
         this.usuario.nome = '';
         this.usuario.email = '';
         this.usuario.userName = '';
         this.usuario.senha = '';
         this.confirmaSenha = '';
-        this.$router.replace({name: "login"});
+        this.$router.go(-1);
       }
     }
   }

@@ -52,7 +52,6 @@
         </q-item-section>
         
       </q-item>
-
       <!-- <q-separator inset color="pink-10" /> -->
     </q-list>
 
@@ -72,6 +71,21 @@
     <q-page-sticky v-if="buttonAdd" position="bottom-right" :offset="[18, 18]">
         <q-btn fab icon="add" color="pink-10" :to="{name: 'cadastraReceita'}" />
     </q-page-sticky>
+
+    <q-dialog v-if="0 == this.receitas.length" v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row">
+          <q-avatar icon="delete" color="pink-10" text-color="white" />
+          <span class="col-9 q-ml-sm q-mt-sm  ">Você não possui receitas cadastradas. Deseja cadastrar?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="pink-10" v-close-popup @click="$router.go(-1)" />
+          <q-btn flat label="Sim" color="pink-10" v-close-popup :to="{name: 'cadastraReceita'}" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+    
   </div>
 </template>
 
@@ -81,7 +95,8 @@ export default {
   mixins: [Global],
   data() {
       return {
-        buttonAdd: true
+        buttonAdd: true,
+        confirm: false
       }
   },
   computed: {
@@ -104,6 +119,8 @@ export default {
       }else{
         this.$store.dispatch('modulos/getReceitas')
       }
+
+      this.confirm = 0 == this.receitas.length
   }
 }
 </script>

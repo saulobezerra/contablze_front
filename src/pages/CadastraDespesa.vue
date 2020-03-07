@@ -82,7 +82,7 @@
       <q-card>
         <q-card-section class="row">
           <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">Você deseja realmente excluir essa despesa?</span>
+          <span class="col-9 q-ml-sm q-mt-sm  ">{{msgModal}}</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -107,7 +107,8 @@ export default {
           data: ''
         },
         tipoDespesa: '',
-        confirm: false
+        confirm: false,
+        msgModal: ''
       }
   },
   mounted() {
@@ -147,7 +148,6 @@ export default {
       for (let index = 0; index < tiposDesp.length; index++) {
         names.push(tiposDesp[index].descricao);
       }
-      //console.log(names);
       return names;
     }
   },
@@ -170,11 +170,11 @@ export default {
     },
 
     excluiDespesa() {
-      console.log(this.$route.params.id)
       this.$store.dispatch('modulos/deletarDespesa', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        console.log("Erro na exclusão",error);
+        this.msg = 'Erro ao excluir despesa.'
+        this.confirm = true;
       });
 
     },
@@ -209,6 +209,7 @@ export default {
     
     onReset() {
       if(this.$route.name == 'editarDespesa') {
+        this.msgModal = 'Você deseja realmente excluir essa despesa?'
         this.confirm = true;
       }else {
         this.despesa.descricao = '';

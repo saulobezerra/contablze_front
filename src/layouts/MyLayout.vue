@@ -14,6 +14,7 @@
         <q-toolbar-title class="text-center text-bold" style="margin-left: -2%;">
           {{titulo}}
         </q-toolbar-title>
+        <q-icon size="sm" name="exit_to_app" @click="logout" class="logout"/>
         
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
@@ -113,11 +114,20 @@ export default {
       else
         return true;
     }
+  },
+  methods: {
+    logout() {
+      localStorage.setItem('usuario', JSON.stringify(null));
+      this.$router.push({name: 'login'})
+    }
   }
 }
 </script>
 <style>
 .cor{
   background-color: rgb(136, 14, 79);
+}
+.logout{
+  
 }
 </style>

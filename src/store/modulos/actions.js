@@ -15,7 +15,9 @@ const axios = Axios.create({
 //     return Promise.reject(error);
 //   });
 
-var idUsuario = 0;
+ if(JSON.parse(localStorage.getItem('usuario')))
+    var idUsuario = JSON.parse(localStorage.getItem('usuario')).id;
+  
 
 export function someAction (/* context */) {
 }
@@ -29,7 +31,7 @@ export function login(state, dadosLogin) {
             console.log(resp.data)
             state.commit('setUsuario', resp.data)
             idUsuario = state.getters['getUsuarioId']
-            resolve(true)
+            resolve(resp.data)
         })
         .catch(function (error) {
             let err = Global.methods.trataErros(error)
@@ -45,7 +47,6 @@ export function gravaUsuario(state, usuario) {
         
         axios.post('/usuarios', usuario).then((resp) => {
             console.log("Cadastro realizado com sucesso", resp.data);
-            //Pode já gravar no state em user
             resolve(true)
         })
         .catch( (error) => {
@@ -158,7 +159,6 @@ export function gravaDespesa(state, despesa) {
 }
 
 export function getDespesas(state) {
-    idUsuario =  state.getters.getUsuario.id
     axios.get('/despesas/usuario/' + idUsuario)
     .then(resp => {
         state.commit('setDespesas', resp.data)

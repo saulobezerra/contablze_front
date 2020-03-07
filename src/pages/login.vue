@@ -40,6 +40,20 @@
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
       </div>
     </q-form>
+
+    <q-dialog v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row">
+          <q-avatar icon="delete" color="pink-10" text-color="white" />
+          <span class="col-9 q-ml-sm q-mt-sm  "> {{msgModal}} </span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="pink-10" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -50,7 +64,9 @@ export default {
       return {
         login: null,
         senha: null,
-        accept: true
+        accept: true,
+        msgModal: '',
+        confirm: false
       }
   },
   mounted() {
@@ -68,22 +84,18 @@ export default {
         })
       }
       else {
-        // this.$q.notify({
-        //   color: 'green-4',
-        //   textColor: 'white',
-        //   icon: 'cloud_done',
-        //   message: 'Submitted'
-        // })
         let dadosLogin ={
           login: this.login,
           senha: btoa(this.senha)
         } 
         this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
-          console.log(resp)
+          let usuario = JSON.stringify(resp);
+          localStorage.setItem('usuario', usuario);
           this.$router.go(-1)
         })
         .catch(err => {
-          console.log(err)
+          this.msgModal = 'Erro ao efeutar login. ' + err
+          this.confirm = true  
         })
       }
     },

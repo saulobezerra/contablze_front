@@ -71,7 +71,7 @@
       <q-card>
         <q-card-section class="row">
           <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">Você deseja realmente excluir essa receita?</span>
+          <span class="col-9 q-ml-sm q-mt-sm  "> {{msgModal}} </span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -100,7 +100,8 @@ export default {
         produto: null,  
         situacao: '',
         situacoes:['Pendente', 'Pago'],
-        confirm: false
+        confirm: false,
+        msgModal: ''
       }
   },
   filters: {
@@ -175,11 +176,11 @@ export default {
     },
 
     excluiReceita() {
-      console.log(this.$route.params.id)
       this.$store.dispatch('modulos/deletarReceita', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        console.log("Erro na exclusão",error);
+        this.msgModal = 'Erro ao excluir receita'
+        this.confirm = true
       });
     },
 
@@ -213,6 +214,7 @@ export default {
 
     onReset() {
       if(this.$route.name == 'editarReceita') {
+        this.msgModal = 'Você deseja realmente excluir essa receita?'
         this.confirm = true;
       }else{
         this.receita = {

@@ -21,7 +21,6 @@
         </q-item-section>
         
       </q-item>
-
       <!-- <q-separator inset color="pink-10" /> -->
     </q-list>
 
@@ -30,6 +29,21 @@
     <q-page-sticky v-if="buttonAdd" position="bottom-right" :offset="[18, 18]">
         <q-btn fab icon="add" color="pink-10" :to="{name: 'cadastraProduto'}" />
     </q-page-sticky>
+
+     <q-dialog v-if="0 == produtos.length" v-model="confirm" persistent>
+      <q-card>
+        <q-card-section class="row">
+          <q-avatar icon="delete" color="pink-10" text-color="white" />
+          <span class="col-9 q-ml-sm q-mt-sm  ">Você não possui produto cadastrado. Deseja cadastrar?</span>
+        </q-card-section>
+
+        <q-card-actions align="right">
+          <q-btn flat label="Não" color="pink-10" v-close-popup @click="$router.go(-1)" />
+          <q-btn flat label="Sim" color="pink-10" v-close-popup :to="{name: 'cadastraProduto'}" />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
   </div>
 </template>
 
@@ -39,7 +53,9 @@ export default {
   mixins: [Global],
   data() {
       return {
-        buttonAdd: true
+        buttonAdd: true, 
+        confirm: false,
+        prod: {}
       }
   },
   computed: {
@@ -47,15 +63,12 @@ export default {
           return this.$store.getters['modulos/getProdutos']
       }
   },
-  beforeMount() {
-    if( !this.$store.getters['modulos/getProdutos'] ) {
-      this.$router.replace({name: 'cadastraProduto'})
-    }
-  },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Produtos')
       this.$store.dispatch('modulos/getProdutos')
-  }
+
+      this.confirm = 0 == this.produtos.length
+  },
 }
 </script>
 

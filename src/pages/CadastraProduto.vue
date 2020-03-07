@@ -44,11 +44,11 @@
 
     </q-form>
 
-        <q-dialog v-model="confirm" persistent>
+    <q-dialog v-model="confirm" persistent>
       <q-card>
         <q-card-section class="row">
           <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">Você deseja realmente excluir esse produto?</span>
+          <span class="col-9 q-ml-sm q-mt-sm  ">{{msgModal}}</span>
         </q-card-section>
 
         <q-card-actions align="right">
@@ -68,7 +68,8 @@ export default {
             nome: '',
             valor: null
         },
-        confirm: false
+        confirm: false,
+        msgModal: ''
       }
   },
   
@@ -88,11 +89,11 @@ export default {
   },
   methods: {
     excluiProduto() {
-      console.log(this.$route.params.id)
       this.$store.dispatch('modulos/deletarProduto', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        console.log("Erro na exclusão",error);
+        this.msgModal = 'Erro ao excluir produto.'
+        this.confirm = true
       });
     },
 
@@ -112,6 +113,7 @@ export default {
     },
     onReset() {
       if (this.$route.name == 'editarProduto') {
+        this.msgModal = 'Você deseja realmente excluir esse produto?'
         this.confirm = true
       }else {
         this.produto.nome = '';

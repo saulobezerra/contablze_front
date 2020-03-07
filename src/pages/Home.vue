@@ -28,10 +28,11 @@ export default {
 
   mounted() {
     let usuario = this.$store.state.modulos.user;
-    if(usuario == undefined || usuario.nome == undefined )
+    if(!JSON.parse(localStorage.getItem('usuario')))
       this.$router.push({name: "login"});
     else{
-      this.$store.commit('modulos/setTitulo', 'Menu');
+      this.$store.commit('modulos/setUsuario', JSON.parse(localStorage.getItem('usuario')))
+      this.$store.commit('modulos/setTitulo', 'Menu')
     }
   }
 }
