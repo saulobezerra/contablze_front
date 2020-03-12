@@ -54,8 +54,7 @@ export default {
   data() {
       return {
         buttonAdd: true, 
-        confirm: false,
-        prod: {}
+        confirm: false
       }
   },
   computed: {
@@ -65,9 +64,9 @@ export default {
   },
   mounted() {
       this.$store.commit('modulos/setTitulo', 'Produtos')
-      this.$store.dispatch('modulos/getProdutos')
-
-      this.confirm = 0 == this.produtos.length
+      this.$store.dispatch('modulos/getProdutos').then(qtdeProdutos => {
+        this.confirm = 0 == qtdeProdutos;
+      })
   },
 }
 </script>

@@ -30,7 +30,10 @@ const Global = {
           return 'Algo deu errado.'
       }
       else{
-        return error.response.data.message;
+        if (error.response.data.status == 500)
+          return 'Erro interno no servidor.'
+        else 
+          return error.response.data.message;
       }
     }
   }

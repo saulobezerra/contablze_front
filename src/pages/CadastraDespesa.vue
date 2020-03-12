@@ -173,8 +173,7 @@ export default {
       this.$store.dispatch('modulos/deletarDespesa', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        this.msg = 'Erro ao excluir despesa.'
-        this.confirm = true;
+        console.log(error)
       });
 
     },

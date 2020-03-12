@@ -1,13 +1,12 @@
 <template>
     <q-dialog v-model="confirm" persistent>
-      <q-card>  
-        <q-card-section class="row">
-          <q-avatar icon="error" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">{{mensagem}}</span>
+      <q-card style="width: 95%">  
+        <q-card-section align="center" class="col">
+          <q-avatar  icon="error" color="pink-10" text-color="white" />
+          <span class="row justify-center q-mt-sm">{{mensagem}}</span>
         </q-card-section>
 
-        <q-card-actions align="right">
-          <!-- <q-btn flat label="Não" color="pink-10" v-close-popup /> -->
+        <q-card-actions align="center">
           <q-btn flat label="Ok" color="pink-10" v-close-popup @click="zeraMsgErro" />
         </q-card-actions>
       </q-card>

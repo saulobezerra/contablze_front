@@ -100,12 +100,14 @@ export default {
       this.$store.commit('modulos/setTitulo', 'Despesas')
 
       if(this.$route.params.mes && this.$route.params.ano ){
-        this.$store.dispatch('modulos/getDespesasPorMes', this.$route.params)
+        this.$store.dispatch('modulos/getDespesasPorMes', this.$route.params).then(qtdeDespesas => {
+          this.confirm = 0 == qtdeDespesas;
+        })
       }else{
-        this.$store.dispatch('modulos/getDespesas')
+        this.$store.dispatch('modulos/getDespesas').then(qtdeDespesas => {
+          this.confirm = 0 == qtdeDespesas;
+        })
       }
-
-      this.confirm = 0 == this.despesas.length
   }
 }
 </script>

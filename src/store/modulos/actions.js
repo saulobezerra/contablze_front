@@ -4,7 +4,7 @@ import Global from '../../mixins/Global'
 
 
 const axios = Axios.create({
-    baseURL: 'http://192.168.0.105:8080',
+    baseURL: 'https://contablz-e.herokuapp.com',
     timeout: 20000,
     // headers: {'X-Custom-Header': 'foobar'}
   });
@@ -67,27 +67,33 @@ export function getUsers() {
 }
 
 export function getReceitas (state) {
-    axios.get('/receitas/usuario/'+idUsuario)
-	.then((resp) => {
-        state.commit('setReceitas', resp.data)
-        state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
-	})
-	.catch(function (error) {
-        console.log(error.response.data);
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-  });
+    return new Promise((resolve) => {
+        axios.get('/receitas/usuario/'+idUsuario)
+        .then((resp) => {
+            state.commit('setReceitas', resp.data)
+            state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
+            resolve(resp.data.length)
+        })
+        .catch(function (error) {
+            console.log(error.response.data);
+            state.commit('setMensagemErro', Global.methods.trataErros(error));
+      });
+    })
 }
 
 export function getReceitasPorMes (state, periodo) {
-    axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
-	.then((resp) => {
-        state.commit('setReceitas', resp.data)
-        state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
-	})
-	.catch(function (error) {
-        console.log(error.response.data);
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-  });
+    return new Promise((resolve) => {
+        axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
+        .then((resp) => {
+            state.commit('setReceitas', resp.data)
+            state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
+            resolve(resp.data.length);
+        })
+        .catch(function (error) {
+            console.log(error.response.data);
+            state.commit('setMensagemErro', Global.methods.trataErros(error));
+      });
+    })
 }
 
 export function gravaReceita (state, receita) {
@@ -121,7 +127,6 @@ export function editarDespesa (state, parametrosDaRequisicao) {
     axios.put('/despesas/' + parametrosDaRequisicao.idDespesa, parametrosDaRequisicao.despesa)
     .then(resp => {
         console.log('Despesa alterada com sucesso', resp.data)
-        //state.dispatch('getDespesas')
     })
     .catch(error => {
         console.log(error.response.data)
@@ -159,28 +164,33 @@ export function gravaDespesa(state, despesa) {
 }
 
 export function getDespesas(state) {
-    axios.get('/despesas/usuario/' + idUsuario)
-    .then(resp => {
-        state.commit('setDespesas', resp.data)
-        state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
-    })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    return new Promise((resolve) => {
+        axios.get('/despesas/usuario/' + idUsuario)
+        .then(resp => {
+            state.commit('setDespesas', resp.data)
+            state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
+            resolve(resp.data.length)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+            state.commit('setMensagemErro', Global.methods.trataErros(error));
+        })
     })
 } 
 
 export function getDespesasPorMes(state, periodo) {
-    //idUsuario =  Global.methods.getIdUsuario()
-    idUsuario =  state.getters.getUsuario.id
-    axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
-    .then(resp => {
-        state.commit('setDespesas', resp.data)
-        state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
-    })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    return new Promise((resolve) => {
+        idUsuario =  state.getters.getUsuario.id
+        axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
+        .then(resp => {
+            state.commit('setDespesas', resp.data)
+            state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
+            resolve(resp.data.length)
+        })
+        .catch(error => {
+            console.log(error.response.data)
+            state.commit('setMensagemErro', Global.methods.trataErros(error));
+        })
     })
 } 
 
@@ -251,14 +261,19 @@ export function editaProduto(state, parametrosDaRequisicao) {
 }
 
 export function getProdutos(state) {
-    axios.get('/produtos/usuario/'+ idUsuario)
-    .then((resp) => {
-        state.commit('setProdutos', resp.data)
-    })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-    })
+    return new Promise((resolve, reject) => {
+        axios.get('/produtos/usuario/'+ idUsuario)
+        .then((resp) => {
+            state.commit('setProdutos', resp.data)
+            resolve(resp.data.length);
+        })
+        .catch(error => {
+            console.log(error.response.data)
+            state.commit('setMensagemErro', Global.methods.trataErros(error));
+            reject();
+        })
+    } )
+    
 }
 
 export function getLucrosDefault(state) {

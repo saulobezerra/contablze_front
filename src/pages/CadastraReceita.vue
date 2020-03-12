@@ -179,8 +179,7 @@ export default {
       this.$store.dispatch('modulos/deletarReceita', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        this.msgModal = 'Erro ao excluir receita'
-        this.confirm = true
+        console.log(error)
       });
     },
 

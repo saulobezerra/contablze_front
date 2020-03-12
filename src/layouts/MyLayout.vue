@@ -11,10 +11,11 @@
           aria-label="Menu"
         /> -->
         <q-icon v-if="exibeArrowBack" size="sm" name="arrow_back" @click="$router.go(-1)" style="position:absolute;"/>
-        <q-toolbar-title class="text-center text-bold" style="margin-left: -2%;">
-          {{titulo}}
+        <q-toolbar-title class="text-center text-bold">
+          <span class="absolute-center">{{titulo}}</span> 
+          <q-icon v-if="exibeLogout" size="sm" name="exit_to_app" @click="logout" class="q-mt-xs" style="float: right"/>
         </q-toolbar-title>
-        <q-icon size="sm" name="exit_to_app" @click="logout" class="logout"/>
+        
         
         <!-- <div>Quasar v{{ $q.version }}</div> -->
       </q-toolbar>
@@ -113,13 +114,21 @@ export default {
         return false;
       else
         return true;
+    },
+    exibeLogout() {
+      let rota = this.$route.name;
+      if(rota == 'menu')
+        return true;
+      else
+        return false;
     }
   },
   methods: {
     logout() {
       localStorage.setItem('usuario', JSON.stringify(null));
       this.$router.push({name: 'login'})
-    }
+    },
+    
   }
 }
 </script>
@@ -127,7 +136,5 @@ export default {
 .cor{
   background-color: rgb(136, 14, 79);
 }
-.logout{
-  
-}
+
 </style>

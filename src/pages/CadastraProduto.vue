@@ -92,8 +92,8 @@ export default {
       this.$store.dispatch('modulos/deletarProduto', this.$route.params.id).then(() => {
         this.$router.go(-1);
       }).catch(error => {
-        this.msgModal = 'Erro ao excluir produto.'
-        this.confirm = true
+        // this.msgModal = 'Erro ao excluir produto.'
+        // this.confirm = true
       });
     },
 

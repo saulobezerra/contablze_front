@@ -115,12 +115,14 @@ export default {
       this.$store.commit('modulos/setTitulo', 'Receitas')
 
       if(this.$route.params.mes && this.$route.params.ano ){
-        this.$store.dispatch('modulos/getReceitasPorMes', this.$route.params)
+        this.$store.dispatch('modulos/getReceitasPorMes', this.$route.params).then(qtdeReceitas => {
+          this.confirm = 0 == qtdeReceitas;
+        })
       }else{
-        this.$store.dispatch('modulos/getReceitas')
+        this.$store.dispatch('modulos/getReceitas').then(qtdeReceitas => {
+          this.confirm = 0 == qtdeReceitas;
+        })
       }
-
-      this.confirm = 0 == this.receitas.length
   }
 }
 </script>

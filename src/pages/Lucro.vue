@@ -11,7 +11,7 @@
             <q-item-label lines="1"> Receitas </q-item-label>
           </q-item-section>
           <q-item-section side center>
-            {{lucro.totalReceita}}
+            {{lucro.totalReceita | formataDuasCasaDecimais}}
           </q-item-section>
         </q-item>
 
@@ -20,7 +20,7 @@
             <q-item-label lines="1"> Despesas </q-item-label>
           </q-item-section>
           <q-item-section side center>
-            {{lucro.totalDespesa}}
+            {{lucro.totalDespesa | formataDuasCasaDecimais}}
           </q-item-section>
         </q-item>
         <!-- <q-separator inset color="pink-10" /> -->
@@ -32,7 +32,7 @@
             <q-item-label lines="1"> Lucro </q-item-label>
           </q-item-section>
           <q-item-section side center style="color: rgb(136, 14, 79)">
-            {{lucro.vLucro}}
+            {{lucro.vLucro | formataDuasCasaDecimais}}
           </q-item-section>        
         </q-item>
         <q-separator color="pink-10" />
@@ -58,10 +58,15 @@ export default {
           return this.$store.getters['modulos/getLucrosDefault']
         }
     },
+    filters: {
+      formataDuasCasaDecimais: function (valor) {
+        return valor.toFixed(2)
+      }
+    },
     mounted() {
-      this.lucros;
+      this.lucros
       this.$store.commit('modulos/setTitulo', 'Lucros')
-      this.$store.dispatch('modulos/getLucrosDefault');
+      this.$store.dispatch('modulos/getLucrosDefault')
     },
 
     methods:{
