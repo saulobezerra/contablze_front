@@ -91,6 +91,7 @@ export default {
         this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
           let usuario = JSON.stringify(resp);
           localStorage.setItem('usuario', usuario);
+          this.$store.commit('modulos/setUsuario', resp);
           this.$router.go(-1)
         })
         .catch(err => {

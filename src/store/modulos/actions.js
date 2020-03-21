@@ -1,22 +1,48 @@
 // import Vue from 'vue'
 import Axios from "axios";
 import Global from '../../mixins/Global'
+import {Loading} from 'quasar'
 
 
 const axios = Axios.create({
     baseURL: 'https://contablz-e.herokuapp.com',
-    timeout: 20000,
+    timeout: 35000,
     // headers: {'X-Custom-Header': 'foobar'}
   });
 
-//   axios.interceptors.response.use(function (response) {
-//     return response;
-//   }, function (error) {
-//     return Promise.reject(error);
-//   });
+  axios.interceptors.response.use(function (response) {
+    Loading.hide()
+    return response;
+  }, function (error) {
+    Loading.hide()
+    return Promise.reject(error);
+  });
 
- if(JSON.parse(localStorage.getItem('usuario')))
-    var idUsuario = JSON.parse(localStorage.getItem('usuario')).id;
+  axios.interceptors.request.use(function (response) {
+      console.log(response.url)
+    if (response.url.indexOf("loadingApp") < 0) {
+        Loading.show({
+            spinnerSize: 50,
+            spinnerColor: 'yellow'
+        })
+    } else {
+        Loading.show({
+            spinnerSize: 50,
+            spinnerColor: 'yellow',
+            customClass: 'classLoading'
+        })
+        response.url = response.url.replace('loadingApp', 'usuarios')
+    }
+    console.log(response.url)
+    return response;
+  }, function (error) {
+    return Promise.reject(error);
+  });
+
+ if(JSON.parse(localStorage.getItem('usuario'))){
+     var usuarioGlobal = JSON.parse(localStorage.getItem('usuario'));
+     var idUsuario = JSON.parse(localStorage.getItem('usuario')).id;
+ }
   
 
 export function someAction (/* context */) {
@@ -57,13 +83,34 @@ export function gravaUsuario(state, usuario) {
     }) 
 }
 
-export function getUsers() {
+export function getUsuario() {
     console.log("request users");
-    axios.get('/users').then((resp) => {
-        console.log(resp.data);
-    }).catch(e => {
-        console.log(e);
-    });
+    return new Promise((resolve, reject) => {
+        axios.get('/usuarios/'+idUsuario).then((resp) => {
+            if((resp.data.email == usuarioGlobal.email) && (resp.data.userName == usuarioGlobal.userName))
+                resolve(true)
+            else
+                resolve(false)
+       }).catch(e => {
+            console.log(e);
+            reject()
+       });
+    })
+}
+
+export function loadingApp() {
+    console.log("request users");
+    return new Promise((resolve, reject) => {
+        axios.get('/loadingApp/'+idUsuario).then((resp) => {
+            if((resp.data.email == usuarioGlobal.email) && (resp.data.userName == usuarioGlobal.userName))
+                resolve(true)
+            else
+                resolve(false)
+       }).catch(e => {
+            console.log(e);
+            reject()
+       });
+    })
 }
 
 export function getReceitas (state) {
@@ -99,11 +146,11 @@ export function getReceitasPorMes (state, periodo) {
 export function gravaReceita (state, receita) {
     receita['usuario'] = new Object();
     receita['usuario']['id'] = idUsuario;
-
     axios.post('/receitas', receita)
     .then(resp => {
         console.log('Receita cadastrada com sucesso' , resp)
         //state.dispatch('getReceitas')
+        state.commit('addReceita', resp.data)
     })
     .catch(error => {
         console.log(error.response.data)
@@ -112,6 +159,7 @@ export function gravaReceita (state, receita) {
 }
 
 export function editarReceita (state, parametrosDaRequisicao) {
+    console.log(parametrosDaRequisicao)
     axios.put('/receitas/' + parametrosDaRequisicao.idReceita, parametrosDaRequisicao.receita)
     .then(resp => {
         console.log('Receita alterada com sucesso', resp.data)
@@ -126,6 +174,8 @@ export function editarReceita (state, parametrosDaRequisicao) {
 export function editarDespesa (state, parametrosDaRequisicao) {
     axios.put('/despesas/' + parametrosDaRequisicao.idDespesa, parametrosDaRequisicao.despesa)
     .then(resp => {
+        //state.commit('addProduto', resp.data)
+        state.dispatch('getDespesas')
         console.log('Despesa alterada com sucesso', resp.data)
     })
     .catch(error => {
@@ -156,6 +206,7 @@ export function gravaDespesa(state, despesa) {
     axios.post('/despesas', despesa)
     .then(resp => {
         //state.dispatch('getDespesas')
+        state.commit('addDespesa', resp.data)
     })
     .catch(error => {
         console.log(error.response.data)
@@ -180,7 +231,6 @@ export function getDespesas(state) {
 
 export function getDespesasPorMes(state, periodo) {
     return new Promise((resolve) => {
-        idUsuario =  state.getters.getUsuario.id
         axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
         .then(resp => {
             state.commit('setDespesas', resp.data)
@@ -268,7 +318,7 @@ export function getProdutos(state) {
             resolve(resp.data.length);
         })
         .catch(error => {
-            console.log(error.response.data)
+            console.log(error)
             state.commit('setMensagemErro', Global.methods.trataErros(error));
             reject();
         })
@@ -278,7 +328,7 @@ export function getProdutos(state) {
 
 export function getLucrosDefault(state) {
     //idUsuario =  Global.methods.getIdUsuario()
-    idUsuario =  state.getters.getUsuario.id
+    //idUsuario =  state.getters.getUsuario.id
     axios.get('/lucros/usuario/' + idUsuario + '/default')
     .then(resp => {
         state.commit('setLucrosDefault', resp.data)

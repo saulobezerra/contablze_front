@@ -15,18 +15,22 @@
           <q-item-label v-if="despesa.descricao" lines="1" class="text-weight-bold text-body1"> {{despesa.descricao}} </q-item-label>
           <q-item-label v-else lines="1" class="text-weight-bold text-body1"> {{despesa.tipo.descricao}} </q-item-label>
           <q-item-label caption lines="4">
-            <span class="text-weight-bold text-body2">Quantidade: </span>
-            <span class="text-body2"> {{despesa.qtde_insumo}} </span>
-            <br>
-            <span class="text-weight-bold text-body2">Local: </span>
-            <span class="text-body2"> {{despesa.local}} </span>
-            <br>
-            <span class="text-weight-bold text-body2">Data: </span>
-            <span class="text-body2"> {{despesa.data}} </span>    
-            <br>   
-            <span class="text-weight-bold text-body2">Valor Unitário: </span>
-            <span class="text-body2"> {{ despesa.valorUnitario.toFixed(2) }} </span>
-            <br>
+            <div>
+              <span class="text-weight-bold text-body2">Quantidade: </span>
+              <span class="text-body2"> {{despesa.qtde_insumo}} </span>
+            </div>
+            <div  v-if="despesa.local">
+              <span class="text-weight-bold text-body2">Local/Fornec.: </span>
+              <span class="text-body2"> {{despesa.local}} </span>
+            </div>
+            <div>
+              <span class="text-weight-bold text-body2">Data: </span>
+              <span class="text-body2"> {{despesa.data}} </span>    
+            </div>
+            <div>
+              <span class="text-weight-bold text-body2">Valor Unitário: </span>
+              <span class="text-body2"> {{ despesa.valorUnitario.toFixed(2) }} </span>
+            </div>
           </q-item-label>
         </q-item-section>
 
@@ -65,7 +69,7 @@
 
         <q-card-actions align="right">
           <q-btn flat label="Não" color="pink-10" v-close-popup @click="$router.go(-1)" />
-          <q-btn flat label="Sim" color="pink-10" v-close-popup :to="{name: 'cadastraReceita'}" />
+          <q-btn flat label="Sim" color="pink-10" v-close-popup :to="{name: 'cadastraDespesa'}" />
         </q-card-actions>
       </q-card>
     </q-dialog>

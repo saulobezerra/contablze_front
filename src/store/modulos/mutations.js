@@ -7,7 +7,7 @@ export const setTitulo = (state, titulo) => {
     state.titulo = titulo
 }
 export const addDespesa = (state, despesa) => {
-    despesa["valor"] = despesa.valorUnitario * despesa.qtdeInsumo
+    despesa["valor"] = despesa.valorUnitario * despesa.qtde_insumo;
     state.despesas.push(despesa)
 }
 export const addReceita = (state, receita) => {
@@ -28,10 +28,11 @@ export const setTiposDespesa = (state, tiposDespesa) => {
 
 export const totalDespesas = (state, valor) => {
     state.totalDespesas = valor;
-}// setLucrosDefault
+}
+
 export const totalReceitas = (state, valor) => {
     state.totalReceitas = valor;
-}//addProduto
+}
 
 export const addProduto = (state, produto) => {
     state.produtos.push(produto);

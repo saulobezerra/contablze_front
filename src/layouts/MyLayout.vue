@@ -94,8 +94,6 @@
 
 <script>
 
-//import {arrow_back} from '@quasar/extras/material-icons'
-
 export default {
   name: 'MyLayout',
 

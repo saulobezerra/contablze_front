@@ -16,13 +16,13 @@
           "backgroundColor": "#000074"
         },
         "spa": {
-          "iconHash": "4156ac735c5cc887f1e1c268f912b988"
+          "iconHash": "18a8fab372edf9f226e29ea079640464"
         }
       },
       "build": {
         "cordova": {
-          "iconHash": "4156ac735c5cc887f1e1c268f912b988",
-          "splashscreenHash": "807eede81940c8b73d9027f5031942f5",
+          "iconHash": "18a8fab372edf9f226e29ea079640464",
+          "splashscreenHash": "f9a54072f7b23c094edf8e58c89e2658",
           "splashscreenType": "pure",
           "backgroundColor": "#000074"
         }
