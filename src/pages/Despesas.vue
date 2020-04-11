@@ -45,13 +45,13 @@
 
     <q-separator color="pink-10" />
     
-    <q-list :class="{'total text-bold':buttonAdd, 'background-Color': true}">
+    <q-list v-if="despesas.length > 0" :class="{'total text-bold':buttonAdd, 'background-Color': true}">
         <q-item color="dark">
             <q-item-section >
                 <q-item-label lines="1"> Total </q-item-label>
             </q-item-section>
             <q-item-section side center>
-                R$ {{$store.state.modulos.totalDespesas}}
+                R$ {{totalDespesas}}
             </q-item-section>
         </q-item>    
     </q-list>
@@ -64,7 +64,7 @@
       <q-card>
         <q-card-section class="row">
           <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">Você não possui receitas cadastradas. Deseja cadastrar?</span>
+          <span class="col-9 q-ml-sm q-mt-sm  ">Você não possui despesas cadastradas. Deseja cadastrar?</span>
         </q-card-section>
 
         <q-card-actions align="right">

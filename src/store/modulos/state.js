@@ -7,6 +7,7 @@ export default {
   tiposDespesa: [],
   totalDespesas: 0,
   totalReceitas: 0,
+  totalReceitasPendentes: 0,
   lucros: [],
   mes: 0,
   msgError: '',

@@ -118,7 +118,8 @@ export function getReceitas (state) {
         axios.get('/receitas/usuario/'+idUsuario)
         .then((resp) => {
             state.commit('setReceitas', resp.data)
-            state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
+            state.commit('totalReceitas', Global.methods.calculaTotal(resp.data) )
+            state.commit('setTotalReceitasPendentes', Global.methods.getTotalPendentes(resp.data) )
             resolve(resp.data.length)
         })
         .catch(function (error) {
@@ -133,7 +134,8 @@ export function getReceitasPorMes (state, periodo) {
         axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
         .then((resp) => {
             state.commit('setReceitas', resp.data)
-            state.commit( 'totalReceitas', Global.methods.calculaTotal(resp.data) )
+            state.commit('totalReceitas', Global.methods.calculaTotal(resp.data) )
+            state.commit('setTotalReceitasPendentes', Global.methods.getTotalPendentes(resp.data) )
             resolve(resp.data.length);
         })
         .catch(function (error) {
@@ -161,9 +163,8 @@ export function gravaReceita (state, receita) {
 export function editarReceita (state, parametrosDaRequisicao) {
     console.log(parametrosDaRequisicao)
     axios.put('/receitas/' + parametrosDaRequisicao.idReceita, parametrosDaRequisicao.receita)
-    .then(resp => {
-        console.log('Receita alterada com sucesso', resp.data)
-
+    .then(() => {
+        state.dispatch('getReceitas')
     })
     .catch(error => {
         console.log(error.response.data)

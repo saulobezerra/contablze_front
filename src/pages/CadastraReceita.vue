@@ -6,7 +6,7 @@
       @submit="onSubmit"
       @reset="onReset"
     >
-      <q-select rounded filled behavior="menu"
+      <q-select color="pink-10" rounded filled behavior="menu" options-selected-class
          v-model="produto" :options="produtos | namesProd" hint="Produto" label="Produto *" 
          lazy-rules :rules="[ val => val && val.length > 0 || 'Informe o produto da receita.' ]" />
 
@@ -121,6 +121,9 @@ export default {
   },
 
   mounted() {
+    if (this.produtos.length == 0){
+      this.$store.dispatch('modulos/getProdutos');
+    }
     const that = this
       if (this.$route.name == 'editarReceita') {
         let obj = this.$store.getters['modulos/getReceitas'].find(function(el, i) {

@@ -25,7 +25,8 @@
             <span class="text-body2"> {{receita.dataReceita}} </span>    
             <br>   
             <span class="text-weight-bold text-body2">Situação: </span>
-            <span class="text-body2"> {{ receita.isPago ? "Pago" : "Pendente" }} </span>
+            <span v-if="receita.isPago" class="text-body2"> Pago </span>
+            <span v-else class="text-body2" style="color: red"> Pendente </span>
             <br>
             <div v-if="receita.observacao">
               <span class="text-weight-bold text-body2">Obs.: </span>
@@ -44,11 +45,14 @@
           </q-item-label>
         </q-item-section> -->
 
-        <q-item-section side center>
+        <q-item-section v-if="receita.isPago" side center>
           R$ {{receita.valor.toFixed(2)}}
           <!-- <q-item-label>
             <span class="text-body2"> {{receita.isPago }} </span>
           </q-item-label> -->
+        </q-item-section>
+        <q-item-section v-else side center style="color: red">
+          R$ {{receita.valor.toFixed(2)}}
         </q-item-section>
         
       </q-item>
@@ -57,10 +61,18 @@
 
     <q-separator color="pink-10" />
     
-    <q-list :class="{'total text-bold':buttonAdd, 'background-Color': true}">
+    <q-list v-if="receitas.length > 0" :class="{'total text-bold':buttonAdd, 'background-Color': true}">
+        <q-item v-if="totalReceitasPendentes != 0" color="dark">
+            <q-item-section >
+                <q-item-label lines="1"> Total Pendentes </q-item-label>
+            </q-item-section>
+            <q-item-section side center>
+                R$ {{totalReceitasPendentes}}
+            </q-item-section>
+        </q-item>    
         <q-item color="dark">
             <q-item-section >
-                <q-item-label lines="1"> Total </q-item-label>
+                <q-item-label lines="1"> Total Pago </q-item-label>
             </q-item-section>
             <q-item-section side center>
                 R$ {{totalReceitas}}
@@ -105,6 +117,9 @@ export default {
       },
       totalReceitas() {
           return this.$store.getters['modulos/getTotalReceitas']
+      },
+      totalReceitasPendentes() {
+          return this.$store.getters['modulos/getTotalReceitasPendentes']
       }
   },
   beforeMount() {
@@ -133,7 +148,7 @@ export default {
   margin-bottom: 25%;
 }
 .background-Color {
-  background-color: rgb(253, 216, 53);
+  background-color: rgb(250, 222, 100);
   
 }
 .alturaLabelItem{

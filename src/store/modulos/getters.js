@@ -22,6 +22,10 @@ export function getTotalReceitas(state) {
     return state.totalReceitas
 }
 
+export function getTotalReceitasPendentes(state) {
+    return state.totalReceitasPendentes
+}
+
 export function getTotalDespesas(state) {
     return state.totalDespesas
 }

@@ -38,6 +38,10 @@ export const addProduto = (state, produto) => {
     state.produtos.push(produto);
 }
 
+export const setTotalReceitasPendentes = (state, totalPendentes) => {
+    state.totalReceitasPendentes = totalPendentes;
+}
+
 export const setProdutos = (state, produtos) => {
     state.produtos = produtos;
 }
