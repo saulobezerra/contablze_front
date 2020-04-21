@@ -77,14 +77,16 @@
     </q-form>
 
     <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row">
-          <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  ">{{msgModal}}</span>
+      <q-card style="width: 95%">
+        <q-card-section align="center" class="col">
+          <q-avatar v-if="sucess" icon="check" color="pink-10" text-color="white" />
+          <q-avatar v-else icon="error" color="pink-10" text-color="white" />
+          <span class="row justify-center q-mt-sm">{{msgModal}}</span>
         </q-card-section>
 
-        <q-card-actions align="right">
-          <q-btn flat label="Ok" color="pink-10" v-close-popup @click="$router.go(-1)" />
+        <q-card-actions align="center">
+          <q-btn  v-if="sucess" flat label="Ok" color="pink-10" v-close-popup @click="$router.go(-1)" />
+          <q-btn  v-else flat label="Ok" color="pink-10" v-close-popup />
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -103,7 +105,8 @@ export default {
         },
         confirmaSenha: '',
         confirm: false,
-        msgModal: ''
+        msgModal: '',
+        sucess: false
       }
   },
   mounted() {
@@ -126,12 +129,14 @@ export default {
         senha: btoa(this.usuario.senha)
       }
 
-      this.$store.dispatch('modulos/gravaUsuario', user ).then(r => {
-        msgModal = 'Cadastro realizado com sucesso!'
-        confirm = true
+      this.$store.dispatch('modulos/gravaUsuario', user ).then(() => {
+        this.msgModal = 'Cadastro realizado com sucesso!'
+        this.confirm = true
+        this.sucess = true
       }).catch(e => {
-        msgModal = 'Erro ao realizar cadastro'
-        confirm = true
+        this.msgModal = 'Erro ao realizar cadastro.'
+        this.confirm = true
+        this.sucess = false
       })
       
     },

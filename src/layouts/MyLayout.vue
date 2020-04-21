@@ -124,6 +124,7 @@ export default {
   methods: {
     logout() {
       localStorage.setItem('usuario', JSON.stringify(null));
+      this.$store.commit('modulos/setUsuario', null);
       this.$router.push({name: 'login'})
     },
     

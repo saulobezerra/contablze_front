@@ -6,6 +6,7 @@ import {Loading} from 'quasar'
 
 const axios = Axios.create({
     baseURL: 'https://contablz-e.herokuapp.com',
+    //baseURL: 'http://localhost:8080',
     timeout: 35000,
     // headers: {'X-Custom-Header': 'foobar'}
   });
