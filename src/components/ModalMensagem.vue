@@ -24,8 +24,7 @@ export default {
   computed: {
     mensagem() {
       let msg = '';
-      msg = this.$store.getters['modulos/getMensagemErro'];
-      msg = this.$store.getters['modulos/getMensagemInfo'];
+      msg = this.$store.getters['modulos/getMensagemErro'] || this.$store.getters['modulos/getMensagemInfo'];
       return msg
     },
     confirm() {

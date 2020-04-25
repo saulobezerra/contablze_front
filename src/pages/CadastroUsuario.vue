@@ -114,10 +114,8 @@ export default {
       if(this.$store.getters['modulos/getUsuario']) {
         this.$store.commit('modulos/setTitulo', 'Meus dados');
         this.usuario = this.$store.getters['modulos/getUsuario']
-        this.usuario.senha = '******'
       }else if(JSON.parse(localStorage.getItem('usuario'))) {
         this.usuario = JSON.parse(localStorage.getItem('usuario'))
-        this.usuario.senha = '******'
       }
   },
   methods: {

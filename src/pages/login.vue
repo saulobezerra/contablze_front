@@ -89,10 +89,15 @@ export default {
           senha: btoa(this.senha)
         } 
         this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
-          let usuario = JSON.stringify(resp);
-          localStorage.setItem('usuario', usuario);
-          this.$store.commit('modulos/setUsuario', resp);
-          this.$router.go(-1)
+          localStorage.token = resp.headers.authorization;
+          this.$store.dispatch('modulos/getUsuario').then(resp => {
+            
+            let usuario = JSON.stringify(resp);
+            console.log(usuario);
+            localStorage.setItem('usuario', usuario);
+            this.$store.commit('modulos/setUsuario', resp);
+            this.$router.go(-1)
+          })
         })
         .catch(err => {
           this.msgModal = 'Erro ao efeutar login. ' + err

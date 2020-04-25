@@ -33,6 +33,8 @@ const Global = {
     },
 
     trataErros(error) {
+      console.log(error)
+      console.log(error.response.data.msg)
       if(error.response == undefined){
         if("Error: Network Error" == error)
           return 'Erro de conexão de rede.'
@@ -43,7 +45,7 @@ const Global = {
         if (error.response.data.status == 500)
           return 'Erro interno no servidor.'
         else 
-          return error.response.data.message;
+          return error.response.data.msg;
       }
     }
   }
