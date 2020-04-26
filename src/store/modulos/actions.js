@@ -138,7 +138,7 @@ export function getReceitas (state) {
 
 export function getReceitasPorMes (state, periodo) {
     return new Promise((resolve) => {
-        axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
+        axios.get('/receitas/mes_ano/'+periodo.mes+'/'+periodo.ano)
         .then((resp) => {
             state.commit('setReceitas', resp.data)
             state.commit('totalReceitas', Global.methods.calculaTotal(resp.data) )
@@ -240,7 +240,7 @@ export function getDespesas(state) {
 
 export function getDespesasPorMes(state, periodo) {
     return new Promise((resolve) => {
-        axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
+        axios.get('/despesas/mes_ano/' + periodo.mes + '/' + periodo.ano)
         .then(resp => {
             state.commit('setDespesas', resp.data)
             state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
