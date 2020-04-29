@@ -42,7 +42,8 @@ export default {
             this.$store.commit('modulos/setUsuario', undefined)
         })
         .catch(e => {
-          this.exibe = true;
+          this.exibe = false;
+          this.$router.push({name: "login"});
         })
       }else {
         this.exibe = true;
