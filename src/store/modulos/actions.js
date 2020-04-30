@@ -1,7 +1,9 @@
-// import Vue from 'vue'
 import Axios from "axios";
 import Global from '../../mixins/Global'
 import {Loading} from 'quasar'
+import VueJwtDecode from 'vue-jwt-decode'
+
+var idUsuario;
 
 const axios = Axios.create({
     //baseURL: 'https://contablz-e.herokuapp.com',
@@ -24,7 +26,7 @@ const axios = Axios.create({
   axios.interceptors.request.use(function (response) {
     console.log(response);
     if (response.url.indexOf("login") < 0) {
-        response.headers.Authorization = localStorage.token;
+        response.headers.Authorization = localStorage.getItem('token');
     }
     console.log(response)
     if (response.url.indexOf("loadingApp") < 0) {
@@ -46,14 +48,6 @@ const axios = Axios.create({
     return Promise.reject(error);
   });
 
- if(JSON.parse(localStorage.getItem('usuario'))){
-     var usuarioGlobal = JSON.parse(localStorage.getItem('usuario'));
-     var idUsuario = JSON.parse(localStorage.getItem('usuario')).id;
- }
-
-export function someAction (/* context */) {
-}
-
 export function login(state, dadosLogin) {
 
     return new Promise((resolve, reject) => {
@@ -62,7 +56,8 @@ export function login(state, dadosLogin) {
             senha: dadosLogin.senha
         }
         axios.post('/login', objLogin).then((resp) => {
-            resolve(resp)
+            state.commit('setToken', resp.headers.authorization);
+            resolve()
         })
         .catch(function (error) {
             console.log(error)
@@ -78,7 +73,6 @@ export function gravaUsuario(state, usuario) {
     return new Promise((resolve, reject) => {
         
         axios.post('/usuarios', usuario).then((resp) => {
-            console.log("Cadastro realizado com sucesso", resp.data);
             resolve(true)
         })
         .catch( (error) => {
@@ -89,15 +83,14 @@ export function gravaUsuario(state, usuario) {
     }) 
 }
 
-export function getUsuario() {
+export function getUsuario(state) {
     console.log("request users");
     return new Promise((resolve, reject) => {
         axios.get('usuarios/usuarioLogado').then((resp) => {
-            console.log(resp.data)
-            let usuario = resp.data;
-            usuario['senha'] = '******'
-            idUsuario = usuario.id;
-            resolve(usuario)
+            idUsuario = resp.data.id;
+            state.commit('setUsuario', resp.data);
+            //state.dispatch('inspectToken')
+            resolve()
        }).catch(e => {
             console.log(e);
             reject()
@@ -331,14 +324,38 @@ export function getProdutos(state) {
             state.commit('setMensagemErro', Global.methods.trataErros(error));
             reject();
         })
-    } )
-    
+    } ) 
 }
 
 export function getLucrosDefault(state) {
     axios.get('/lucros')
     .then(resp => {
         state.commit('setLucrosDefault', resp.data)
+    })
+    .catch(error => {
+        console.log(error.response.data)
+        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    })
+}
+
+export function inspectToken(){
+    let token = (localStorage.getItem('token'));
+    if(token){
+        token = token.substring(7);
+        let decoded = VueJwtDecode.decode(token);
+        let exp = decoded.exp;
+        // let email = decoded.sub;
+        // let alg = decoded.alg;
+        let tempoExpiracao = exp - (Date.now()/1000)
+        if(tempoExpiracao >= 0 && tempoExpiracao < 60)
+            refreshToken
+    }
+}
+
+export function refreshToken(state) {
+    axios.post('/auth/refresh_token')
+    .then(resp => {
+        state.commit('setToken', resp.headers.authorization)
     })
     .catch(error => {
         console.log(error.response.data)

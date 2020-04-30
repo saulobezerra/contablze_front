@@ -70,6 +70,7 @@ export default {
       }
   },
   mounted() {
+    console.log('login')
     this.$store.commit('modulos/setTitulo', 'Login');
     //this.$store.dispatch('modulos/getUsers');
   },
@@ -88,15 +89,9 @@ export default {
           login: this.login,
           senha: btoa(this.senha)
         } 
-        this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
-          localStorage.token = resp.headers.authorization;
-          this.$store.dispatch('modulos/getUsuario').then(resp => {
-            
-            let usuario = JSON.stringify(resp);
-            console.log(usuario);
-            localStorage.setItem('usuario', usuario);
-            this.$store.commit('modulos/setUsuario', resp);
-            this.$router.go(-1)
+        this.$store.dispatch('modulos/login', dadosLogin).then(() => {
+          this.$store.dispatch('modulos/getUsuario').then(() => {
+            this.$router.go(-1) // Volta para Home
           })
         })
         .catch(err => {

@@ -27,28 +27,16 @@ export default {
   },
 
   mounted() {
-    //let usuario = this.$store.state.modulos.user;
-    if(!JSON.parse(localStorage.getItem('usuario')))
-      this.$router.push({name: "login"});
-    else{
+    this.$store.dispatch('modulos/getUsuario')
+    .then(resp => {
+      console.log("Ok");
       this.$store.commit('modulos/setTitulo', 'Menu')
-      let usuario = JSON.parse(localStorage.getItem('usuario'))
-      if (this.$store.state.modulos.user == undefined) {
-        this.$store.dispatch('modulos/loadingApp', usuario.id).then((resp) => {
-          this.exibe = true;
-          if(resp) 
-            this.$store.commit('modulos/setUsuario', usuario)
-          else 
-            this.$store.commit('modulos/setUsuario', undefined)
-        })
-        .catch(e => {
-          this.exibe = false;
-          this.$router.push({name: "login"});
-        })
-      }else {
-        this.exibe = true;
-      }
-    }
+      this.exibe = true;
+    })
+    .catch(erro => {
+      console.log("Erro");
+      this.$router.push({name: "login"});
+    })
   }
 }
 </script>
