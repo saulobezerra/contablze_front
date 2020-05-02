@@ -110,12 +110,12 @@ export default {
       }
   },
   mounted() {
-      this.$store.commit('modulos/setTitulo', 'Cadastro');
-      if(this.$store.getters['modulos/getUsuario']) {
+      if(JSON.parse(localStorage.getItem('usuario'))) {
         this.$store.commit('modulos/setTitulo', 'Meus dados');
-        this.usuario = this.$store.getters['modulos/getUsuario']
-      }else if(JSON.parse(localStorage.getItem('usuario'))) {
         this.usuario = JSON.parse(localStorage.getItem('usuario'))
+      }
+      else {
+        this.$store.commit('modulos/setTitulo', 'Cadastro');
       }
   },
   methods: {
@@ -127,29 +127,32 @@ export default {
         senha: btoa(this.usuario.senha)
       }
 
-      this.$store.dispatch('modulos/gravaUsuario', user ).then(() => {
-        this.msgModal = 'Cadastro realizado com sucesso!'
-        this.confirm = true
-        this.sucess = true
-      }).catch(e => {
-        this.msgModal = 'Erro ao realizar cadastro.'
-        this.confirm = true
-        this.sucess = false
-      })
-      
+      if (this.$route.name == 'perfil') {
+        this.$store.dispatch('modulos/editarUsuario', user )
+        .then(() => {
+          this.msgModal = 'Dados atualizados com sucesso!'
+          this.confirm = true
+          this.sucess = true
+        }).catch(e => {
+          this.msgModal = 'Erro ao atualizar dados.'
+          this.confirm = true
+          this.sucess = false
+        })  
+      }
+      else{
+        this.$store.dispatch('modulos/gravaUsuario', user ).then(() => {
+          this.msgModal = 'Cadastro realizado com sucesso!'
+          this.confirm = true
+          this.sucess = true
+        }).catch(e => {
+          this.msgModal = 'Erro ao realizar cadastro.'
+          this.confirm = true
+          this.sucess = false
+        })
+      }
     },
     onReset() {
-      if(this.$store.state.modulos.user) {
-        // Caso já esteja logado e acesse "Meus Dados" o botão 'Cancelar' torna-se 'Voltar'
-        //this.$router.go(-1);
-      }else {
-        this.usuario.nome = '';
-        this.usuario.email = '';
-        this.usuario.userName = '';
-        this.usuario.senha = '';
-        this.confirmaSenha = '';
-        this.$router.go(-1);
-      }
+      this.$router.go(-1);
     }
   }
 }

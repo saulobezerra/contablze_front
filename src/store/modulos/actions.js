@@ -83,6 +83,19 @@ export function gravaUsuario(state, usuario) {
     }) 
 }
 
+export function editarUsuario (state, user) {
+    console.log(idUsuario)
+    axios.put('/usuarios/' + idUsuario, user)
+    .then((resp) => {
+        console.log(resp.data)
+        state.commit('setUsuario', resp.data)
+    })
+    .catch(error => {
+        console.log(error.response.data)
+        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    })
+}
+
 export function getUsuario(state) {
     console.log("request users");
     return new Promise((resolve, reject) => {
@@ -152,7 +165,7 @@ export function gravaReceita (state, receita) {
     .then(resp => {
         console.log('Receita cadastrada com sucesso' , resp)
         //state.dispatch('getReceitas')
-        state.commit('addReceita', resp.data)
+        //state.commit('addReceita', resp.data)
     })
     .catch(error => {
         console.log(error.response.data)
@@ -207,7 +220,7 @@ export function gravaDespesa(state, despesa) {
     axios.post('/despesas', despesa)
     .then(resp => {
         //state.dispatch('getDespesas')
-        state.commit('addDespesa', resp.data)
+        //state.commit('addDespesa', resp.data)
     })
     .catch(error => {
         console.log(error.response.data)
