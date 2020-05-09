@@ -62,8 +62,8 @@ export const setLucrosDefault = (state, lucros) => {
     state.lucros = lucros;
 }
 
-export const setMensagemErro = (state, msgErro) => {
-    state.msgError = msgErro;
+export const setObjMensagem = (state, objMsg) => {
+    state.objMensagem = objMsg;
 }
 
 export const setToken = (state, valor) => {

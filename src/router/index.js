@@ -25,7 +25,7 @@ export default function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next)=> {
     if (from.name != null) 
-      inspectToken.call()
+      Vue.prototype.$store.dispatch('modulos/inspectToken')
     next()
   })
 

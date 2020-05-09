@@ -40,20 +40,7 @@
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
       </div>
     </q-form>
-
-    <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row">
-          <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  "> {{msgModal}} </span>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Ok" color="pink-10" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
+    
   </div>
 </template>
 
@@ -93,10 +80,6 @@ export default {
           this.$store.dispatch('modulos/getUsuario').then(() => {
             this.$router.go(-1) // Volta para Home
           })
-        })
-        .catch(err => {
-          this.msgModal = 'Erro ao efeutar login. ' + err
-          this.confirm = true  
         })
       }
     },
