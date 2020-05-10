@@ -10,6 +10,7 @@
         v-model="tipoDespesa" :options="tiposDespesa | tipos" hint="Tipo da despesa" label="Tipo *" />
 
       <q-input
+        class="primeiraLetraMaiuscula"
         rounded
         filled
         color="pink-10"
@@ -51,6 +52,7 @@
       />
 
       <q-input
+        class="primeiraLetraMaiuscula"
         rounded
         filled
         color="pink-10"
@@ -170,11 +172,7 @@ export default {
     },
 
     excluiDespesa() {
-      this.$store.dispatch('modulos/deletarDespesa', this.$route.params.id).then(() => {
-        this.$router.go(-1);
-      }).catch(error => {
-        console.log(error)
-      });
+      this.$store.dispatch('modulos/deletarDespesa', this.$route.params.id);
 
     },
 
@@ -202,8 +200,6 @@ export default {
         this.despesa.valorUnitario = parseFloat(this.despesa.valorUnitario);
         this.$store.dispatch('modulos/gravaDespesa', this.despesa);
       }
-      
-      this.$router.go(-1);
     },
     
     onReset() {

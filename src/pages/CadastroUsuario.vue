@@ -7,6 +7,7 @@
       @reset="onReset"
     >
       <q-input
+        class="primeiraLetraMaiuscula"
         rounded
         filled
         color="pink-10"
@@ -75,22 +76,7 @@
         <q-btn rounded class="glossy half-width" label="Cadastrar" type="submit" color="pink-10"/>
       </div>
     </q-form>
-
-    <q-dialog v-model="confirm" persistent>
-      <q-card style="width: 95%">
-        <q-card-section align="center" class="col">
-          <q-avatar v-if="sucess" icon="check" color="pink-10" text-color="white" />
-          <q-avatar v-else icon="error" color="pink-10" text-color="white" />
-          <span class="row justify-center q-mt-sm">{{msgModal}}</span>
-        </q-card-section>
-
-        <q-card-actions align="center">
-          <q-btn  v-if="sucess" flat label="Ok" color="pink-10" v-close-popup @click="$router.go(-1)" />
-          <q-btn  v-else flat label="Ok" color="pink-10" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
+    
   </div>
 </template>
 <script>
@@ -103,21 +89,16 @@ export default {
           email: '',
           senha: '',
         },
-        confirmaSenha: '',
-        confirm: false,
-        msgModal: '',
-        sucess: false
+        confirmaSenha: ''
       }
   },
   mounted() {
-      this.$store.commit('modulos/setTitulo', 'Cadastro');
-      if(this.$store.getters['modulos/getUsuario']) {
+      if(JSON.parse(localStorage.getItem('usuario'))) {
         this.$store.commit('modulos/setTitulo', 'Meus dados');
-        this.usuario = this.$store.getters['modulos/getUsuario']
-        this.usuario.senha = '******'
-      }else if(JSON.parse(localStorage.getItem('usuario'))) {
         this.usuario = JSON.parse(localStorage.getItem('usuario'))
-        this.usuario.senha = '******'
+      }
+      else {
+        this.$store.commit('modulos/setTitulo', 'Cadastro');
       }
   },
   methods: {
@@ -129,29 +110,15 @@ export default {
         senha: btoa(this.usuario.senha)
       }
 
-      this.$store.dispatch('modulos/gravaUsuario', user ).then(() => {
-        this.msgModal = 'Cadastro realizado com sucesso!'
-        this.confirm = true
-        this.sucess = true
-      }).catch(e => {
-        this.msgModal = 'Erro ao realizar cadastro.'
-        this.confirm = true
-        this.sucess = false
-      })
-      
+      if (this.$route.name == 'perfil') {
+        this.$store.dispatch('modulos/editarUsuario', user )
+      }
+      else{
+        this.$store.dispatch('modulos/gravaUsuario', user )
+      }
     },
     onReset() {
-      if(this.$store.state.modulos.user) {
-        // Caso já esteja logado e acesse "Meus Dados" o botão 'Cancelar' torna-se 'Voltar'
-        //this.$router.go(-1);
-      }else {
-        this.usuario.nome = '';
-        this.usuario.email = '';
-        this.usuario.userName = '';
-        this.usuario.senha = '';
-        this.confirmaSenha = '';
-        this.$router.go(-1);
-      }
+      this.$router.go(-1);
     }
   }
 }

@@ -11,6 +11,7 @@
          lazy-rules :rules="[ val => val && val.length > 0 || 'Informe o produto da receita.' ]" />
 
       <q-input
+        class="primeiraLetraMaiuscula"
         rounded
         filled
         color="pink-10"
@@ -179,11 +180,7 @@ export default {
     },
 
     excluiReceita() {
-      this.$store.dispatch('modulos/deletarReceita', this.$route.params.id).then(() => {
-        this.$router.go(-1);
-      }).catch(error => {
-        console.log(error)
-      });
+      this.$store.dispatch('modulos/deletarReceita', this.$route.params.id);
     },
 
     onSubmit() {
@@ -210,8 +207,6 @@ export default {
       }else{
         this.$store.dispatch('modulos/gravaReceita', this.receita)
       }
-    
-      this.$router.go(-1);
     }, 
 
     onReset() {

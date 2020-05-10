@@ -82,10 +82,6 @@ export default {
 }
 </script>
 <style>
-
-.corAzul{
-    background-color: blue
-}
 .total{
   color: rgb(136, 14, 79);
   margin-bottom: 25%;

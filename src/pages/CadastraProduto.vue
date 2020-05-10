@@ -80,21 +80,20 @@ export default {
             if (el.id === that.$route.params.id)
               return el;
           })
-          this.$store.commit('modulos/setTitulo', 'Editar Produto');
-          this.produto.nome = obj.nome
-          this.produto.valor = obj.valor
+          if(obj == null || obj == undefined) { // Quando faz refresh na página
+            this.$router.go(-1)
+          }else {
+            this.$store.commit('modulos/setTitulo', 'Editar Produto');
+            this.produto.nome = obj.nome
+            this.produto.valor = obj.valor
+          }
       }else {
           this.$store.commit('modulos/setTitulo', 'Cadastrar Produto');
       }
   },
   methods: {
     excluiProduto() {
-      this.$store.dispatch('modulos/deletarProduto', this.$route.params.id).then(() => {
-        this.$router.go(-1);
-      }).catch(error => {
-        // this.msgModal = 'Erro ao excluir produto.'
-        // this.confirm = true
-      });
+      this.$store.dispatch('modulos/deletarProduto', this.$route.params.id);
     },
 
     onSubmit() {
@@ -109,7 +108,6 @@ export default {
       }else {
           this.$store.dispatch('modulos/gravaProduto', this.produto )
       }
-      this.$router.go(-1)
     },
     onReset() {
       if (this.$route.name == 'editarProduto') {

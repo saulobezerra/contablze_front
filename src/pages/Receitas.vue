@@ -61,8 +61,8 @@
 
     <q-separator color="pink-10" />
     
-    <q-list v-if="receitas.length > 0" :class="{'total text-bold':buttonAdd, 'background-Color': true}">
-        <q-item v-if="totalReceitasPendentes != 0" color="dark">
+    <q-list v-if="receitas.length > 0" :class="{'total text-bold':true, 'background-Color': true}">
+        <q-item v-if="totalReceitasPendentes != 0">
             <q-item-section >
                 <q-item-label lines="1"> Total Pendentes </q-item-label>
             </q-item-section>
@@ -70,7 +70,7 @@
                 R$ {{totalReceitasPendentes}}
             </q-item-section>
         </q-item>    
-        <q-item color="dark">
+        <q-item>
             <q-item-section >
                 <q-item-label lines="1"> Total Pago </q-item-label>
             </q-item-section>
@@ -122,9 +122,6 @@ export default {
           return this.$store.getters['modulos/getTotalReceitasPendentes']
       }
   },
-  beforeMount() {
-    this.buttonAdd = this.$route.path.search('lucro') >= 0 ? false : true;
-  },
   mounted() {
       this.receitas
       this.$store.commit('modulos/setTitulo', 'Receitas')
@@ -146,6 +143,7 @@ export default {
 
 .total{
   margin-bottom: 25%;
+  color: rgb(136, 14, 79);
 }
 .background-Color {
   background-color: rgb(250, 222, 100);

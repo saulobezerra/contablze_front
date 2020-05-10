@@ -1,69 +1,22 @@
-// import Vue from 'vue'
-import Axios from "axios";
+import axios from "../../library/axios";
 import Global from '../../mixins/Global'
-import {Loading} from 'quasar'
+import VueJwtDecode from 'vue-jwt-decode'
 
-
-const axios = Axios.create({
-    baseURL: 'https://contablz-e.herokuapp.com',
-    //baseURL: 'http://localhost:8080',
-    timeout: 35000,
-    // headers: {'X-Custom-Header': 'foobar'}
-  });
-
-  axios.interceptors.response.use(function (response) {
-    Loading.hide()
-    return response;
-  }, function (error) {
-    Loading.hide()
-    return Promise.reject(error);
-  });
-
-  axios.interceptors.request.use(function (response) {
-      console.log(response.url)
-    if (response.url.indexOf("loadingApp") < 0) {
-        Loading.show({
-            spinnerSize: 50,
-            spinnerColor: 'yellow'
-        })
-    } else {
-        Loading.show({
-            spinnerSize: 50,
-            spinnerColor: 'yellow',
-            customClass: 'classLoading'
-        })
-        response.url = response.url.replace('loadingApp', 'usuarios')
-    }
-    console.log(response.url)
-    return response;
-  }, function (error) {
-    return Promise.reject(error);
-  });
-
- if(JSON.parse(localStorage.getItem('usuario'))){
-     var usuarioGlobal = JSON.parse(localStorage.getItem('usuario'));
-     var idUsuario = JSON.parse(localStorage.getItem('usuario')).id;
- }
-  
-
-export function someAction (/* context */) {
-}
+var idUsuario;
 
 export function login(state, dadosLogin) {
 
     return new Promise((resolve, reject) => {
-        let login = dadosLogin.login;
-        let senha = dadosLogin.senha;
-        axios.get('/usuarios/login/'+login+'/'+senha).then((resp) => {
-            console.log(resp.data)
-            state.commit('setUsuario', resp.data)
-            idUsuario = state.getters['getUsuarioId']
-            resolve(resp.data)
+        let objLogin = {
+            email: dadosLogin.login,
+            senha: dadosLogin.senha
+        }
+        axios.post('/login', objLogin).then((resp) => {
+            state.commit('setToken', resp.headers.authorization);
+            resolve()
         })
         .catch(function (error) {
-            let err = Global.methods.trataErros(error)
-            state.commit('setMensagemErro', err);
-            reject(err)
+            reject(error)
         })
     })
 }
@@ -72,28 +25,46 @@ export function gravaUsuario(state, usuario) {
     console.log(usuario)
     return new Promise((resolve, reject) => {
         
-        axios.post('/usuarios', usuario).then((resp) => {
-            console.log("Cadastro realizado com sucesso", resp.data);
-            resolve(true)
+        axios.post('/usuarios', usuario).then(() => {
+            let objMsg = {
+                msg: 'Cadastro realizado com sucesso!',
+                acao: 'confirma'
+            }
+            state.commit('setObjMensagem', objMsg);
+            resolve()
         })
         .catch( (error) => {
-            let err = Global.methods.trataErros(error)
-            state.commit('setMensagemErro', err);
-            reject(err)
+            console.log(error)
+            reject()
         })
     }) 
 }
 
-export function getUsuario() {
-    console.log("request users");
+export function editarUsuario (state, user) {
+    console.log(idUsuario)
+    axios.put('/usuarios/' + idUsuario, user)
+    .then((resp) => {
+        state.commit('setUsuario', resp.data)
+        let objMsg = {
+            msg: 'Dados atualizados com sucesso!',
+            acao: 'confirma'
+        }
+        state.commit('setObjMensagem', objMsg);
+    })
+    .catch(() => {
+        reject()
+    })
+}
+
+export function getUsuario(state) {
     return new Promise((resolve, reject) => {
-        axios.get('/usuarios/'+idUsuario).then((resp) => {
-            if((resp.data.email == usuarioGlobal.email) && (resp.data.userName == usuarioGlobal.userName))
-                resolve(true)
-            else
-                resolve(false)
-       }).catch(e => {
-            console.log(e);
+        axios.get('usuarios/usuarioLogado')
+        .then((resp) => {
+            idUsuario = resp.data.id;
+            state.commit('setUsuario', resp.data);
+            resolve()
+       })
+       .catch(() => {
             reject()
        });
     })
@@ -102,13 +73,13 @@ export function getUsuario() {
 export function loadingApp() {
     console.log("request users");
     return new Promise((resolve, reject) => {
-        axios.get('/loadingApp/'+idUsuario).then((resp) => {
+        axios.get('/loadingApp/'+idUsuario)
+        .then((resp) => {
             if((resp.data.email == usuarioGlobal.email) && (resp.data.userName == usuarioGlobal.userName))
                 resolve(true)
             else
                 resolve(false)
-       }).catch(e => {
-            console.log(e);
+        }).catch(() => {
             reject()
        });
     })
@@ -116,33 +87,31 @@ export function loadingApp() {
 
 export function getReceitas (state) {
     return new Promise((resolve) => {
-        axios.get('/receitas/usuario/'+idUsuario)
+        axios.get('/receitas')
         .then((resp) => {
             state.commit('setReceitas', resp.data)
             state.commit('totalReceitas', Global.methods.calculaTotal(resp.data) )
             state.commit('setTotalReceitasPendentes', Global.methods.getTotalPendentes(resp.data) )
             resolve(resp.data.length)
         })
-        .catch(function (error) {
-            console.log(error.response.data);
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+        .catch(() => {
+            reject()
       });
     })
 }
 
 export function getReceitasPorMes (state, periodo) {
     return new Promise((resolve) => {
-        axios.get('/receitas/usuario/'+idUsuario+ '/mes_ano/'+periodo.mes+'/'+periodo.ano)
+        axios.get('/receitas/periodo?mes='+periodo.mes+'&ano='+periodo.ano)
         .then((resp) => {
             state.commit('setReceitas', resp.data)
             state.commit('totalReceitas', Global.methods.calculaTotal(resp.data) )
             state.commit('setTotalReceitasPendentes', Global.methods.getTotalPendentes(resp.data) )
             resolve(resp.data.length);
         })
-        .catch(function (error) {
-            console.log(error.response.data);
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
-      });
+        .catch(() => {
+            reject()
+        });
     })
 }
 
@@ -152,12 +121,13 @@ export function gravaReceita (state, receita) {
     axios.post('/receitas', receita)
     .then(resp => {
         console.log('Receita cadastrada com sucesso' , resp)
-        //state.dispatch('getReceitas')
-        state.commit('addReceita', resp.data)
+        let objMsg = {
+            msg: 'Receita cadastrada com sucesso!',
+            acao: 'confirma'
+        }
+        state.commit('setObjMensagem', objMsg);
     })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    .catch(() => {
     })
 }
 
@@ -167,10 +137,6 @@ export function editarReceita (state, parametrosDaRequisicao) {
     .then(() => {
         state.dispatch('getReceitas')
     })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-    })
 }
 
 export function editarDespesa (state, parametrosDaRequisicao) {
@@ -179,12 +145,12 @@ export function editarDespesa (state, parametrosDaRequisicao) {
         //state.commit('addProduto', resp.data)
         state.dispatch('getDespesas')
         console.log('Despesa alterada com sucesso', resp.data)
+        let objMsg = {
+            msg: 'Despesa atualizada com sucesso!',
+            acao: 'confirma'
+        }
+        state.commit('setObjMensagem', objMsg);
     })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-    })
-
 }
 
 export function gravaProduto(state, produto) {
@@ -192,12 +158,13 @@ export function gravaProduto(state, produto) {
     produto['usuario']['id'] = idUsuario;
 
     axios.post('/produtos', produto)
-    .then(resp => {
-        state.commit('addProduto', resp.data)
-    })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+    .then(() => {
+        //state.commit('addProduto', resp.data)
+        let objMsg = {
+            msg: 'Produto cadastrado com sucesso!',
+            acao: 'confirma'
+        }
+        state.commit('setObjMensagem', objMsg);
     })
 }
 
@@ -207,41 +174,39 @@ export function gravaDespesa(state, despesa) {
     console.log(despesa)
     axios.post('/despesas', despesa)
     .then(resp => {
-        //state.dispatch('getDespesas')
-        state.commit('addDespesa', resp.data)
-    })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+        let objMsg = {
+            msg: 'Despesa cadastrada com sucesso!',
+            acao: 'confirma'
+        }
+        state.commit('setObjMensagem', objMsg);
     })
 }
 
 export function getDespesas(state) {
     return new Promise((resolve) => {
-        axios.get('/despesas/usuario/' + idUsuario)
+        axios.get('/despesas')
         .then(resp => {
-            state.commit('setDespesas', resp.data)
-            state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
-            resolve(resp.data.length)
+            let despesas = resp.data;
+            state.commit('setDespesas', despesas)
+            state.commit('totalDespesas', Global.methods.calculaTotal(despesas) )
+            resolve(despesas.length)
         })
         .catch(error => {
-            console.log(error.response.data)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+            reject(error)
         })
     })
 } 
 
 export function getDespesasPorMes(state, periodo) {
     return new Promise((resolve) => {
-        axios.get('/despesas/usuario/' + idUsuario +'/mes_ano/' + periodo.mes + '/' + periodo.ano)
+        axios.get('/despesas/periodo?mes=' + periodo.mes + '&ano=' + periodo.ano)
         .then(resp => {
             state.commit('setDespesas', resp.data)
             state.commit('totalDespesas', Global.methods.calculaTotal(resp.data) )
             resolve(resp.data.length)
         })
         .catch(error => {
-            console.log(error.response.data)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+            reject(error)
         })
     })
 } 
@@ -251,11 +216,15 @@ export function deletarDespesa(state, idDespesa) {
     return new Promise((resolve, reject) => {  
         axios.delete('/despesas/'+idDespesa)
         .then( () => {
+            let objMsg = {
+                msg: 'Despesa excluída!',
+                acao: 'confirma'
+            }
+            state.commit('setObjMensagem', objMsg);
             resolve()
         })
-        .catch(error => {
-            reject(error.response.data)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+        .catch(() => {
+            reject()
         })
     }) 
 }
@@ -265,11 +234,15 @@ export function deletarReceita(state, idReceita) {
     return new Promise((resolve, reject) => {  
         axios.delete('/receitas/'+idReceita)
         .then( () => {
+            let objMsg = {
+                msg: 'Receita excluída!',
+                acao: 'confirma'
+            }
+            state.commit('setObjMensagem', objMsg);
             resolve()
         })
-        .catch(error => {
-            reject(error.response.data)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+        .catch(() => {
+            reject()
         })
     }) 
 }
@@ -279,11 +252,15 @@ export function deletarProduto(state, idProduto) {
     return new Promise((resolve, reject) => {  
         axios.delete('/produtos/'+idProduto)
         .then( () => {
+            let objMsg = {
+                msg: 'Produto excluído!',
+                acao: 'confirma'
+            }
+            state.commit('setObjMensagem', objMsg);
             resolve()
         })
         .catch(error => {
-            reject(error.response.data)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
+            reject(error)
         })
     }) 
 } 
@@ -295,10 +272,6 @@ export function getTiposDespesas (state) {
         state.commit('setTiposDespesa', resp.data)
 
     })
-    .catch(error => {
-        console.log(error.response.data);
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-    })
 }
 
 export function editaProduto(state, parametrosDaRequisicao) {
@@ -306,37 +279,54 @@ export function editaProduto(state, parametrosDaRequisicao) {
     .then((resp) => {
         state.dispatch('getProdutos')
     })
-    .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
-    })
 }
 
 export function getProdutos(state) {
     return new Promise((resolve, reject) => {
-        axios.get('/produtos/usuario/'+ idUsuario)
+        axios.get('/produtos')
         .then((resp) => {
             state.commit('setProdutos', resp.data)
+            console.log(resp.data)
             resolve(resp.data.length);
         })
         .catch(error => {
-            console.log(error)
-            state.commit('setMensagemErro', Global.methods.trataErros(error));
             reject();
         })
-    } )
-    
+    } ) 
 }
 
 export function getLucrosDefault(state) {
-    //idUsuario =  Global.methods.getIdUsuario()
-    //idUsuario =  state.getters.getUsuario.id
-    axios.get('/lucros/usuario/' + idUsuario + '/default')
+    axios.get('/lucros')
     .then(resp => {
         state.commit('setLucrosDefault', resp.data)
     })
+}
+
+export function inspectToken(state){
+    let token = (localStorage.getItem('token'));
+    console.log("Verificando token ", token)
+    if(token){
+        token = token.substring(7);
+        let decoded = VueJwtDecode.decode(token);
+        let exp = decoded.exp;
+        // let email = decoded.sub;
+        // let alg = decoded.alg;
+        let tempoExpiracao = exp - (Date.now()/1000)
+        if(tempoExpiracao >= 0 && tempoExpiracao < 60){
+            console.log("rerfes")
+            refreshToken(state)
+        }
+    }
+}
+
+export function refreshToken(state) {
+    axios.post('/auth/refresh_token')
+    .then(resp => {
+        console.log("refreh token Sucess", resp.headers.authorization)
+        state.commit('setToken', resp.headers.authorization)
+    })
     .catch(error => {
-        console.log(error.response.data)
-        state.commit('setMensagemErro', Global.methods.trataErros(error));
+        console.log("refreh token Fail")
+        console.log(error)
     })
 }

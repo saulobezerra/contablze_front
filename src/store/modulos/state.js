@@ -9,8 +9,10 @@ export default {
   totalReceitas: 0,
   totalReceitasPendentes: 0,
   lucros: [],
-  mes: 0,
-  msgError: '',
-  user: undefined
-
+  user: undefined,
+  objMensagem: {
+    msg: '',
+    acao: '',
+    status: 0
+  }
 }

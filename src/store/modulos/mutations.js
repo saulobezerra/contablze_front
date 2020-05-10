@@ -1,6 +1,10 @@
 // export function someMutation (/* state */) {
 // }
 export const setUsuario = (state, usuario) => {
+    if(usuario != null || usuario != undefined) 
+        usuario['senha'] = '******'
+
+    localStorage.setItem('usuario', JSON.stringify(usuario));
     state.user = usuario;
 }
 export const setTitulo = (state, titulo) => {
@@ -58,6 +62,13 @@ export const setLucrosDefault = (state, lucros) => {
     state.lucros = lucros;
 }
 
-export const setMensagemErro = (state, msgErro) => {
-    state.msgError = msgErro;
+export const setObjMensagem = (state, objMsg) => {
+    state.objMensagem = objMsg;
+}
+
+export const setToken = (state, valor) => {
+    if(valor == null || valor == '')
+        localStorage.removeItem('token');
+    else
+        localStorage.setItem('token', valor);
 }

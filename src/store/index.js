@@ -21,6 +21,6 @@ export default function (/* { ssrContext } */) {
     // for dev mode only
     strict: process.env.DEV
   })
-  
+  Vue.prototype.$store = Store;
   return Store
 }

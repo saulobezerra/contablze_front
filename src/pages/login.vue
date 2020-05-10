@@ -40,20 +40,7 @@
         <q-btn outline rounded class="glossy half-width" label="Limpar" type="reset" color="pink-10" />
       </div>
     </q-form>
-
-    <q-dialog v-model="confirm" persistent>
-      <q-card>
-        <q-card-section class="row">
-          <q-avatar icon="delete" color="pink-10" text-color="white" />
-          <span class="col-9 q-ml-sm q-mt-sm  "> {{msgModal}} </span>
-        </q-card-section>
-
-        <q-card-actions align="right">
-          <q-btn flat label="Ok" color="pink-10" v-close-popup />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-
+    
   </div>
 </template>
 
@@ -70,6 +57,7 @@ export default {
       }
   },
   mounted() {
+    console.log('login')
     this.$store.commit('modulos/setTitulo', 'Login');
     //this.$store.dispatch('modulos/getUsers');
   },
@@ -88,15 +76,10 @@ export default {
           login: this.login,
           senha: btoa(this.senha)
         } 
-        this.$store.dispatch('modulos/login', dadosLogin).then(resp => {
-          let usuario = JSON.stringify(resp);
-          localStorage.setItem('usuario', usuario);
-          this.$store.commit('modulos/setUsuario', resp);
-          this.$router.go(-1)
-        })
-        .catch(err => {
-          this.msgModal = 'Erro ao efeutar login. ' + err
-          this.confirm = true  
+        this.$store.dispatch('modulos/login', dadosLogin).then(() => {
+          this.$store.dispatch('modulos/getUsuario').then(() => {
+            this.$router.go(-1) // Volta para Home
+          })
         })
       }
     },

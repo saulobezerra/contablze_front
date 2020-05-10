@@ -34,6 +34,6 @@ export function getLucrosDefault(state) {
     return state.lucros
 }
 
-export function getMensagemErro(state) {
-    return state.msgError
+export function getObjMensagem(state) {
+    return state.objMensagem
 }
