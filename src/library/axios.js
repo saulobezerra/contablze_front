@@ -3,8 +3,9 @@ import Axios from 'axios';
 import {Loading} from 'quasar';
 
 const axios = Axios.create({
-    //baseURL: 'https://contablz-e.herokuapp.com',
-    baseURL: 'http://localhost:8080',
+    baseURL: 'https://contablz-e.herokuapp.com',
+    // baseURL: 'http://localhost:8080',
+    // baseURL: 'http://192.168.0.103:8080',
     timeout: 35000,
     headers: {
         'Authorization': ''
@@ -19,28 +20,32 @@ axios.interceptors.response.use(
         return response;
     }, 
     function (error) {
+        // console.log(error.response)
         Loading.hide()
         let objErro;
-        console.log(error.response)
         if (error.response != undefined || error.response != null){
-            console.log(error.response.data.message)
-            if(error.response.data.status >= 500) {
+            if(error.response.status >= 500) {
                 objErro = {
                     msg: "Error ao executar a operação.",
                     acao: 'erro',
-                    status: error.response.data.status
+                    status: error.response.status
                 }
-            }else {
+            }else if(error.response.status == 403) {
                 objErro = {
-                    msg: error.response.data.message,
+                    msg: '',
+                    acao: '',
+                    status: 0
+                }
+            } else {
+                objErro = {
+                    msg: error.response.data.message || "Erro desconhecido",
                     acao: 'erro',
-                    status: error.response.data.status
+                    status: error.response.status
                 }
             }
             Vue.prototype.$store.commit('modulos/setObjMensagem', objErro);
         }else {
-            console.log(error.response, "Erro não definido")
-            objErro = {msg: "Erro durante a comunicação.", acao: 'erro'}
+            objErro = {msg: "Erro de conexão.", acao: 'erro'}
             Vue.prototype.$store.commit('modulos/setObjMensagem', objErro);
         }
 
@@ -50,12 +55,12 @@ axios.interceptors.response.use(
 
 axios.interceptors.request.use(
     function (response) {
-        console.log(response);
+        // console.log(response);
         if (response.url.indexOf("login") < 0) {
             response.headers.Authorization = localStorage.getItem('token');
         }
 
-        if (response.url.indexOf("loadingApp") < 0) {
+        if (response.url.indexOf("loadingInicial") < 0) {
             Loading.show({
                 spinnerSize: 50,
                 spinnerColor: 'yellow'
@@ -66,12 +71,13 @@ axios.interceptors.request.use(
                 spinnerColor: 'yellow',
                 customClass: 'classLoading'
             })
-            response.url = response.url.replace('loadingApp', 'usuarioLogado')
+            response.url = response.url.replace('loadingInicial', 'usuarios/usuarioLogado')
+            
         }
-
         return response;
     }, 
     function (error) {
+        // console.log(error)
         return Promise.reject(error);
     }
 );

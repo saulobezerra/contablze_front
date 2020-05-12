@@ -51,15 +51,14 @@ export default {
       return {
         login: null,
         senha: null,
-        accept: true,
-        msgModal: '',
-        confirm: false
+        accept: true
       }
   },
   mounted() {
-    console.log('login')
+    localStorage.setItem('usuario', JSON.stringify(null));
+    this.$store.commit('modulos/setUsuario', null);
+    this.$store.commit('modulos/setToken', null);
     this.$store.commit('modulos/setTitulo', 'Login');
-    //this.$store.dispatch('modulos/getUsers');
   },
   methods: {
     onSubmit () {

@@ -121,14 +121,18 @@ export default {
         return false;
     }
   },
+
+  mounted() {
+    this.$store.dispatch('modulos/loadingInicial')
+  },
+
   methods: {
     logout() {
       localStorage.setItem('usuario', JSON.stringify(null));
       this.$store.commit('modulos/setUsuario', null);
       this.$store.commit('modulos/setToken', null);
       this.$router.push({name: 'login'})
-    },
-    
+    }    
   }
 }
 </script>

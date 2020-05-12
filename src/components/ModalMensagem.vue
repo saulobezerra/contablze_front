@@ -31,14 +31,12 @@ export default {
 
   watch: {
     objMensagem: function(val) {
-      console.log(val)
       if (val.msg)
         this.confirm = true
       else
         this.confirm  = false
       
       let acao = val.acao;
-      console.log(acao)
       if(acao == 'erro')
         this.icone = 'error'
       else if (acao == 'confirma')

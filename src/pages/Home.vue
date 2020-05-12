@@ -25,16 +25,13 @@ export default {
         exibe: false
       }
   },
-
   mounted() {
     this.$store.dispatch('modulos/getUsuario')
     .then(resp => {
-      console.log("Ok");
       this.$store.commit('modulos/setTitulo', 'Menu')
       this.exibe = true;
     })
     .catch(erro => {
-      console.log("Erro");
       this.$router.push({name: "login"});
     })
   }

@@ -22,7 +22,6 @@ export function login(state, dadosLogin) {
 }
 
 export function gravaUsuario(state, usuario) {
-    console.log(usuario)
     return new Promise((resolve, reject) => {
         
         axios.post('/usuarios', usuario).then(() => {
@@ -34,14 +33,13 @@ export function gravaUsuario(state, usuario) {
             resolve()
         })
         .catch( (error) => {
-            console.log(error)
             reject()
         })
     }) 
 }
 
 export function editarUsuario (state, user) {
-    console.log(idUsuario)
+    user['id'] = idUsuario;
     axios.put('/usuarios/' + idUsuario, user)
     .then((resp) => {
         state.commit('setUsuario', resp.data)
@@ -70,19 +68,13 @@ export function getUsuario(state) {
     })
 }
 
-export function loadingApp() {
-    console.log("request users");
-    return new Promise((resolve, reject) => {
-        axios.get('/loadingApp/'+idUsuario)
-        .then((resp) => {
-            if((resp.data.email == usuarioGlobal.email) && (resp.data.userName == usuarioGlobal.userName))
-                resolve(true)
-            else
-                resolve(false)
-        }).catch(() => {
-            reject()
-       });
-    })
+export function loadingInicial() {
+        axios.get('/loadingInicial')
+        // .then((resp) => {
+        //     console.log(resp)
+        //     idUsuario = resp.data.id;
+        //     state.commit('setUsuario', resp.data);
+        // })
 }
 
 export function getReceitas (state) {
@@ -120,7 +112,6 @@ export function gravaReceita (state, receita) {
     receita['usuario']['id'] = idUsuario;
     axios.post('/receitas', receita)
     .then(resp => {
-        console.log('Receita cadastrada com sucesso' , resp)
         let objMsg = {
             msg: 'Receita cadastrada com sucesso!',
             acao: 'confirma'
@@ -132,7 +123,6 @@ export function gravaReceita (state, receita) {
 }
 
 export function editarReceita (state, parametrosDaRequisicao) {
-    console.log(parametrosDaRequisicao)
     axios.put('/receitas/' + parametrosDaRequisicao.idReceita, parametrosDaRequisicao.receita)
     .then(() => {
         state.dispatch('getReceitas')
@@ -144,7 +134,6 @@ export function editarDespesa (state, parametrosDaRequisicao) {
     .then(resp => {
         //state.commit('addProduto', resp.data)
         state.dispatch('getDespesas')
-        console.log('Despesa alterada com sucesso', resp.data)
         let objMsg = {
             msg: 'Despesa atualizada com sucesso!',
             acao: 'confirma'
@@ -171,7 +160,6 @@ export function gravaProduto(state, produto) {
 export function gravaDespesa(state, despesa) {
     despesa['usuario'] = new Object();
     despesa['usuario']['id'] = idUsuario;
-    console.log(despesa)
     axios.post('/despesas', despesa)
     .then(resp => {
         let objMsg = {
@@ -268,9 +256,7 @@ export function deletarProduto(state, idProduto) {
 export function getTiposDespesas (state) {
     axios.get('/tiposDespesa')
     .then(resp => {
-        console.log(resp)
         state.commit('setTiposDespesa', resp.data)
-
     })
 }
 
@@ -286,7 +272,6 @@ export function getProdutos(state) {
         axios.get('/produtos')
         .then((resp) => {
             state.commit('setProdutos', resp.data)
-            console.log(resp.data)
             resolve(resp.data.length);
         })
         .catch(error => {
@@ -304,7 +289,6 @@ export function getLucrosDefault(state) {
 
 export function inspectToken(state){
     let token = (localStorage.getItem('token'));
-    console.log("Verificando token ", token)
     if(token){
         token = token.substring(7);
         let decoded = VueJwtDecode.decode(token);
@@ -312,8 +296,7 @@ export function inspectToken(state){
         // let email = decoded.sub;
         // let alg = decoded.alg;
         let tempoExpiracao = exp - (Date.now()/1000)
-        if(tempoExpiracao >= 0 && tempoExpiracao < 60){
-            console.log("rerfes")
+        if(tempoExpiracao >= 0 && tempoExpiracao < 2*24*60*60){ // hh*mm*ss
             refreshToken(state)
         }
     }
@@ -322,11 +305,6 @@ export function inspectToken(state){
 export function refreshToken(state) {
     axios.post('/auth/refresh_token')
     .then(resp => {
-        console.log("refreh token Sucess", resp.headers.authorization)
         state.commit('setToken', resp.headers.authorization)
-    })
-    .catch(error => {
-        console.log("refreh token Fail")
-        console.log(error)
     })
 }
